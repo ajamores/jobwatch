@@ -57,6 +57,20 @@ Development (R&D), Information Technology, Data and Analytics, Product Managemen
 Business Development, Business Operations, Customer Service, Finance and Accounting,
 Human Resources.
 
+## Exporting a spreadsheet
+
+```bash
+.venv/bin/python export.py jobs.json --out entry_level_dev_jobs.csv
+```
+
+27 columns, one row per posting, opening cleanly in Sheets and Excel. The last three —
+Status, Applied on, Notes — are his to fill in, and a re-export carries them across on
+apply URL rather than wiping them. Never pass `--clobber` unless he asks; it discards
+that tracking.
+
+Use `parse.py --no-state` when exporting a one-off search, or `seen.json` gets polluted
+with a search the scheduled watch does not use.
+
 ## Reporting back
 
 `jobs.json` is everything that passed the filters, newest first. `new.json` is the subset
