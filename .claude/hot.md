@@ -1,4 +1,6 @@
-# hot — browser-use / hiring.cafe scraper
+# hot — hiringcafe-watch
+
+<https://github.com/ajamores/hiringcafe-watch> (private)
 
 _Updated 2026-09-08_
 
@@ -27,8 +29,10 @@ Ontario · Software Development · Entry+Mid · Full Time · 14 days → 136 job
 
 ## In flight
 
-- Cron is **paused** (crontab entry commented). Moving the schedule to the old MacBook —
-  WSL cron dies when the terminal closes. Porting steps are in `NOTES.md`.
+- Cron is **paused** (crontab entry commented). Moving the schedule to the old MacBook,
+  which runs Linux — WSL cron dies when the terminal closes. Porting steps in `NOTES.md`.
+  Open question there: whether a headless box can run headed Chrome under Xvfb and still
+  clear Cloudflare. Untested.
 - `notify.py` needs `GMAIL_USER` + `GMAIL_APP_PASSWORD` in `.env`. Not yet set, so email
   is untested end to end. Everything else runs.
 

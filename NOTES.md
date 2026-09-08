@@ -202,14 +202,26 @@ terminal for the day and it stops silently, with no error to notice.
 
 ### Moving it to the MacBook
 
-1. Clone the repo, `uv sync`.
-2. Chrome is found automatically at `/Applications/Google Chrome.app/...`; set
-   `CHROME_PATH` in `.env` only if it lives somewhere else.
-3. Copy `.env` across (it is gitignored, so it will not come with the clone).
-4. Copy `seen.json` too, or the first run emails the entire back catalogue.
-5. `crontab -e`, same line with the new path.
-6. macOS sleeps. `caffeinate`, or Settings → Battery → Prevent automatic sleeping, or the
-   runs simply will not happen.
+The MacBook runs Linux, not macOS, so this is the same setup as here — no app bundle
+paths, no `caffeinate`.
+
+```bash
+git clone https://github.com/ajamores/hiringcafe-watch
+cd hiringcafe-watch && uv sync
+```
+
+1. Install Chrome if it is not there. `chrome.py` finds it at any of the usual Linux
+   paths; set `CHROME_PATH` in `.env` if it is somewhere unusual.
+2. **Copy `.env` across by hand** — it is gitignored and will not come with the clone.
+3. `seen.json` *is* committed, so the clone starts with this machine's history and will
+   not email the back catalogue. It is the one piece of state deliberately tracked in git.
+   Only ever schedule it on one machine, or the two will fight over that file.
+4. A headed browser needs a display. If the MacBook runs headless — no desktop session —
+   cron will have no `DISPLAY` and Chrome will not start. Either leave it logged into a
+   desktop, or run an X server (`Xvfb :99` and `DISPLAY=:99`) — untested, and Cloudflare
+   may or may not accept it.
+5. `crontab -e`, the line from above with the new path.
+6. Stop it sleeping, or the runs will not happen.
 
 `notify.py` emails the contents of `new.json` as an HTML digest — title, company,
 location, salary band, workplace type, seniority, YOE, tech stack, and a direct link to
