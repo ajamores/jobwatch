@@ -1,0 +1,219 @@
+# What counts as worth reporting. Data, not code — edit freely.
+#
+#   + <text>   keep a posting only if its TITLE contains one of these
+#   - <text>   drop the posting whatever else matches
+#   @ <text>   acceptable place; a posting whose location is unknown is still kept
+#
+# Matching is case-insensitive and starts on a word boundary, so "qa" does not match
+# "Qatar" and "test" does not match "contest".
+#
+# Tuned tight to software and software-engineering work. The wider tech-adjacent net is
+# one edit away — re-add support / technician / IT / analyst lines to the + list — but it
+# pulled in security guards and veterinary technicians, so it is off by default.
+
+# --- software ------------------------------------------------------------------
++ software
++ developer
++ development
++ programmer
++ engineer
++ engineering
++ full stack
++ full-stack
++ backend
++ back end
++ back-end
++ frontend
++ front end
++ front-end
++ web
++ application
++ applications
++ api
++ platform
++ devops
++ sre
++ site reliability
++ cloud
++ machine learning
++ mobile
+
+# --- languages and stacks -------------------------------------------------------
++ java
++ .net
++ c#
++ python
++ javascript
++ typescript
++ react
++ node
++ angular
++ sql
+
+# --- test and quality -----------------------------------------------------------
++ qa
++ quality assurance
++ test
++ tester
++ automation
+
+# --- IT ------------------------------------------------------------------------
+# Short entries like "it" are matched whole, so this does not catch "Item Clerk".
++ it
++ information technology
++ help desk
++ helpdesk
++ service desk
++ deskside
++ desktop
++ tech support
++ technical support
++ it support
++ support analyst
++ support specialist
++ service delivery
++ end user
++ endpoint
++ network
++ sysadmin
++ system administrator
++ systems administrator
++ server
++ active directory
++ office 365
++ m365
++ incident
++ technical services
++ technical specialist
++ technical consultant
++ it operations
++ noc
+
+# --- data and systems -----------------------------------------------------------
++ data engineer
++ data scientist
++ data analyst
++ database
++ systems analyst
++ business systems
++ technical analyst
++ solutions analyst
++ integration
+
+# --- seniority: too senior to be worth the click --------------------------------
+- senior
+- sr.
+- staff
+- principal
+- lead
+- director
+- manager
+- head of
+- vp
+- vice president
+- chief
+- architect
+
+# --- "engineer" that is not software engineering --------------------------------
+# Hatch is an engineering consultancy and the cities hire civil and transit engineers;
+# without these, "engineer" alone returns dozens of them.
+- civil
+- structural
+- geotechnical
+- mechanical
+- electrical
+- chemical
+- metallurg
+- mining
+- mineral
+- process engineer
+- water
+- wastewater
+- environmental
+- transit
+- traffic
+- transportation
+- fleet
+- facilities
+- infrastructure designer
+- planner
+- planning
+- surveyor
+- hvac
+- piping
+- welding
+- rail
+- tunnel
+- bridge
+- maintenance
+- construction
+- field
+- site engineer
+- plant
+- pyrometallurgy
+- hydrotechnical
+- geotech
+- tailings
+- clean tech
+- climate
+- utilities
+- controls
+- control and automation
+- technologist
+- supervisor
+
+# --- not tech at all ------------------------------------------------------------
+- sales
+- account executive
+- account manager
+- business development
+- economic development
+- veterinary
+- security guard
+- guard
+- letter carrier
+- mail carrier
+- postal
+- post office
+- driver
+- warehouse
+- cleaner
+- custodian
+- crossing guard
+- firefighter
+- paramedic
+- nurse
+- lifeguard
+- instructor
+- coach
+- bilingual
+- french
+
+# --- where ---------------------------------------------------------------------
+@ hamilton
+@ burlington
+@ oakville
+@ mississauga
+@ brampton
+@ milton
+@ stoney creek
+@ ancaster
+@ dundas
+@ grimsby
+@ st. catharines
+@ niagara
+@ kitchener
+@ waterloo
+@ cambridge
+@ guelph
+@ brantford
+@ toronto
+@ etobicoke
+@ north york
+@ scarborough
+@ markham
+@ vaughan
+@ richmond hill
+@ ontario
+@ remote
+@ canada

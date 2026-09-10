@@ -1,0 +1,39 @@
+# Employers to check directly, straight from their own careers page.
+#
+#   ats  host  label  [key=value,...]        (two or more spaces between fields)
+#
+# The point of this file is that adding an employer is a line, not code. There is one
+# adapter per job-board vendor in sources/, and your bookmarks only use a handful of
+# vendors between them.
+#
+# Unlike the hiring.cafe run, nothing here is filtered by age: these employers are worth
+# checking whether a posting went up today or last year. "New" means new to seen_sites.json.
+
+# --- BambooHR ------------------------------------------------------------------
+bamboohr        cityofhamilton.bamboohr.com   City of Hamilton
+bamboohr        ramsoftinc.bamboohr.com       RamSoft
+bamboohr        appficiency.bamboohr.com      Appficiency
+bamboohr        stymiest.bamboohr.com         Stymiest
+
+# --- Greenhouse ----------------------------------------------------------------
+# Greenhouse boards are named by a token, not a hostname — it is the last part of the
+# company's boards.greenhouse.io URL. These carry a real posting date, which most of
+# the SuccessFactors tenants below do not.
+greenhouse      faire                         Faire
+greenhouse      flashfood                     Flashfood
+
+# --- SAP SuccessFactors --------------------------------------------------------
+successfactors  jobs.toronto.ca               City of Toronto           path=/jobsatcity
+successfactors  jobs.mississauga.ca           City of Mississauga
+successfactors  jobs-emplois.ottawa.ca        City of Ottawa            path=/city-jobs
+successfactors  careers.regionofwaterloo.ca   Region of Waterloo        path=/RoW
+successfactors  jobs.canadapost.ca            Canada Post
+successfactors  careers.bankofcanada.ca       Bank of Canada
+successfactors  careers.purolator.com         Purolator
+successfactors  jobs.scotiabank.com           Scotiabank
+successfactors  jobs.canadalife.com           Canada Life
+successfactors  jobs.hatch.com                Hatch
+successfactors  najobs.arcelormittal.com      ArcelorMittal Dofasco     path=/dofasco
+# Ferrero is NOT SuccessFactors — the fingerprint was a false positive and
+# /tile-search-results/ 404s there. Left out until its real vendor is identified.
+# ???           www.ferrerocareers.com        Ferrero

@@ -24,6 +24,11 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 
+def age(j):
+    """Not every board prints a posting date; say so rather than inventing one."""
+    return f"posted {j['age_days']}d ago" if j.get("age_days") is not None else "date not listed"
+
+
 def row(j):
     salary = j["salary"]["text"] or "—"
     tech = ", ".join((j["tech"] or [])[:6])
@@ -43,14 +48,14 @@ def row(j):
         </div>
         <div style="font-size:13px;color:#666;margin-top:4px">
           <strong>{escape(salary)}</strong>{' · ' + escape(meta) if meta else ''}
-          · posted {j['age_days']}d ago
+          · {escape(age(j))}
         </div>
         {f'<div style="font-size:12px;color:#888;margin-top:4px">{escape(tech)}</div>' if tech else ''}
       </td>
     </tr>"""
 
 
-def build(jobs):
+def build(jobs, label="hiring.cafe"):
     when = datetime.now().strftime("%a %-d %b, %-I:%M%p")
     html = f"""<html><body style="margin:0;padding:20px;background:#fafafa;
       font-family:-apple-system,Segoe UI,Roboto,sans-serif">
@@ -58,13 +63,13 @@ def build(jobs):
                   border:1px solid #e5e5e5;border-radius:8px">
         <div style="font-size:18px;font-weight:600">
           {len(jobs)} new posting{'s' if len(jobs) != 1 else ''}</div>
-        <div style="font-size:12px;color:#888;margin-bottom:8px">hiring.cafe · {when}</div>
+        <div style="font-size:12px;color:#888;margin-bottom:8px">{escape(label)} · {when}</div>
         <table style="width:100%;border-collapse:collapse">{''.join(row(j) for j in jobs)}</table>
       </div></body></html>"""
 
     text = "\n\n".join(
         f"{j['title']} — {j['company']}\n{j['location']} · {j['salary']['text'] or '—'} "
-        f"· posted {j['age_days']}d ago\n{j['apply_url']}"
+        f"· {age(j)}\n{j['apply_url']}"
         for j in jobs
     )
     return html, text
@@ -74,6 +79,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("new", nargs="?", default="new.json")
     ap.add_argument("--to")
+    ap.add_argument("--label", default="hiring.cafe",
+                    help="what to print under the heading")
     ap.add_argument("--always", action="store_true", help="send even when nothing is new")
     ap.add_argument("--dry-run", action="store_true", help="print, do not send")
     args = ap.parse_args()
@@ -87,7 +94,7 @@ def main():
         print("nothing new, no email sent")
         return
 
-    html, text = build(jobs)
+    html, text = build(jobs, args.label)
     if args.dry_run:
         print(text or "(nothing new)")
         return

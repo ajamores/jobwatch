@@ -1,0 +1,50 @@
+# Bookmarked employers with no adapter yet. Not a config file — a to-do list.
+#
+# Two different reasons, needing two different fixes.
+#
+# A. ANSWERED, BUT NO FINGERPRINT (17)
+#    The page loads fine, then builds its job list in the browser. A plain fetch sees an
+#    empty shell. Re-check these through the headed Chrome in scrape.py and most will
+#    reveal an ATS. Faire sat in this group until 2026-09-09 and turned out to be
+#    Greenhouse — two good postings, real dates, real salary bands.
+#
+# B. REFUSED A PLAIN SCRIPT (8)
+#    403 to urllib. Same fix — headed Chrome already clears this class of block.
+
+# --- A: Golden Horseshoe. This is the gap; nothing local is reaching the results ---
+https://www.burlington.ca/en/council-and-city-administration/careers.aspx   City of Burlington
+https://www.hwdsb.on.ca/careers/                                           Hamilton-Wentworth DSB
+https://www.hdsb.ca/our-board/careers/                                     Halton DSB
+https://www.peelschools.org/careers/list                                   Peel DSB
+https://www.hpl.ca/jobs                                                    Hamilton Public Library
+https://www.redeemer.ca/about/careers/                                     Redeemer University (Ancaster)
+https://www.npei.ca/about-us/careers                                       Niagara Peninsula Energy
+https://rwdi.com/careers/                                                  RWDI (Guelph)
+https://www.johnstonequipment.com/en/careers/current-job-postings          Johnston Equipment
+https://greatsn.com/job-board/                                             GREATSN (Six Nations)
+
+# --- A: everyone else -----------------------------------------------------------
+https://jobs.sobeyscareers.com/                                            Sobeys
+https://jobs.cardinalhealth.com/                                           Cardinal Health
+https://www.telus.com/agcg/en-ca/careers/positions                         TELUS Agriculture
+https://answernet.com/about/careers/                                       AnswerNet
+https://www.ccohs.ca/ccohs/careers                                         CCOHS
+https://careers.cse-cst.gc.ca/en/careers-carrieres/professionals-professionnels/opportunities/  CSE
+https://emploisfp-psjobs.cfp-psc.gc.ca/psrs-srfp/applicant/page2440        Public Service Commission
+
+# --- B: 403 to a plain script ---------------------------------------------------
+https://careers.manulife.com/global/en/search-results                      Manulife
+https://jobs.globalpayments.com/en/jobs/                                   Global Payments
+https://careers.mcdonalds.ca/corporate-search                              McDonald's Canada
+https://jobs.telusdigital.com/en_US/careers/                               TELUS Digital
+https://www.ziprecruiter.com/co/VC3/Jobs/-in-Toronto,ON                    VC3 via ZipRecruiter
+https://careerready.mohawkcollege.ca/myAccount/career/postings.htm         Mohawk Career Ready (login-walled)
+
+# --- B: broken bookmarks, need replacing ----------------------------------------
+https://www.brantford.ca/en/your-government/full-time-opportunities.aspx    City of Brantford (404 — page moved)
+https://www.workforceplanninghamilton.ca/jobs/                             Workforce Planning Hamilton (no connection)
+
+# --- Deliberately dropped -------------------------------------------------------
+# LinkedIn saved searches x4 — login-walled, hostile to scripts, and hiring.cafe
+# already covers the same inventory.
+# Ferrero — fingerprinted as SuccessFactors, is not; /tile-search-results/ 404s.

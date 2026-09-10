@@ -9,6 +9,8 @@ watch.log
 jobs_raw.json
 jobs.json
 new.json
+sites_jobs.json
+new_sites.json
 
 # old DOM-scraping era, kept locally for comparison
 cards.json
