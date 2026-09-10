@@ -16,8 +16,8 @@ import re
 from html import unescape
 from urllib.parse import unquote, urljoin
 
-from . import http
-from .schema import blank, clean, parse_date, parse_salary
+from .. import http
+from ..schema import blank, clean, parse_date, parse_salary
 
 # Tenants that print no location column still encode one in the posting slug:
 #   /job/Toronto-Performance-Engineer-ON-M5H3Y2/605123817/

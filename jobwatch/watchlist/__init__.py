@@ -1,18 +1,15 @@
-"""Adapters: one module per job-board vendor, not one per employer.
+"""The watchlist stream: named employers, checked on their own boards.
 
-Every adapter exposes the same two things, so `sites.py` never needs to know which
-vendor it is talking to:
-
-    fetch(site)          -> [job, ...]   cheap; runs on every check
-    enrich(site, jobs)   -> None         optional; per-posting detail, new postings only
-
-`job` is the dict defined in schema.py — the same shape parse.py produces for
-hiring.cafe, so export.py and notify.py work unchanged.
+`check` runs one pass over every site in watchlist.txt; the vendor-specific work
+lives in `adapters`, so `check` never needs to know which vendor it is talking
+to. Every adapter returns the record defined in `schema.py` — the same shape
+`hiringcafe.parse` produces, so `notify` and `export` work against either stream.
 """
 
+import re
 from dataclasses import dataclass, field
 
-from . import bamboohr, greenhouse, successfactors
+from .adapters import bamboohr, greenhouse, successfactors
 
 ADAPTERS = {m.ATS: m for m in (bamboohr, greenhouse, successfactors)}
 
@@ -38,7 +35,7 @@ def parse_watchlist(text):
         line = raw.split("#", 1)[0].strip()
         if not line:
             continue
-        parts = [p.strip() for p in __import__("re").split(r"\s{2,}", line) if p.strip()]
+        parts = [p.strip() for p in re.split(r"\s{2,}", line) if p.strip()]
         if len(parts) < 2:
             problems.append(f"line {n}: need at least 'ats  host' — {raw.strip()!r}")
             continue

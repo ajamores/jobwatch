@@ -3,13 +3,15 @@
 Data only. Application tracking lives in Armand's own tracker, so this deliberately
 adds no Status / Applied / Notes columns.
 
-    python export.py [jobs.json] [--out jobs.csv]
+    python -m jobwatch.export [data/jobs.json] [--out exports/jobs.csv]
 """
 
 import argparse
 import csv
 import json
 from pathlib import Path
+
+from .paths import DATA, EXPORTS
 
 COLUMNS = [
     ("Posted", lambda j: (j["published"] or "")[:10]),
@@ -42,8 +44,8 @@ COLUMNS = [
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("jobs", nargs="?", default="jobs.json")
-    ap.add_argument("--out", default="jobs.csv")
+    ap.add_argument("jobs", nargs="?", default=str(DATA / "jobs.json"))
+    ap.add_argument("--out", default=str(EXPORTS / "jobs.csv"))
     ap.add_argument("--keep-empty", action="store_true",
                     help="keep columns no posting filled in")
     args = ap.parse_args()
@@ -69,4 +71,5 @@ def main():
           f"{f' ({dropped} empty ones dropped)' if dropped else ''}")
 
 
-main()
+if __name__ == "__main__":
+    main()

@@ -8,7 +8,7 @@ Needs two lines in .env (gitignored):
 An app password is not your Google password — make one at
 https://myaccount.google.com/apppasswords (requires 2FA on the account).
 
-    python notify.py [new.json] [--to someone@else.com] [--always] [--dry-run]
+    python -m jobwatch.notify [data/new.json] [--to someone@else.com] [--always] [--dry-run]
 """
 
 import argparse
@@ -22,6 +22,8 @@ from html import escape
 from pathlib import Path
 
 from dotenv import load_dotenv
+
+from .paths import DATA, ROOT
 
 
 def age(j):
@@ -77,7 +79,7 @@ def build(jobs, label="hiring.cafe"):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("new", nargs="?", default="new.json")
+    ap.add_argument("new", nargs="?", default=str(DATA / "new.json"))
     ap.add_argument("--to")
     ap.add_argument("--label", default="hiring.cafe",
                     help="what to print under the heading")
@@ -85,7 +87,7 @@ def main():
     ap.add_argument("--dry-run", action="store_true", help="print, do not send")
     args = ap.parse_args()
 
-    load_dotenv()
+    load_dotenv(ROOT / ".env")
     user = os.getenv("GMAIL_USER")
     password = os.getenv("GMAIL_APP_PASSWORD")
 
@@ -116,4 +118,5 @@ def main():
     print(f"emailed {len(jobs)} jobs to {msg['To']}")
 
 
-main()
+if __name__ == "__main__":
+    main()

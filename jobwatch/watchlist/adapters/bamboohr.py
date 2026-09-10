@@ -12,8 +12,8 @@ it only runs for postings the watchlist has not seen before.
 import re
 from html import unescape
 
-from . import http
-from .schema import blank, clean, parse_date, parse_salary
+from .. import http
+from ..schema import blank, clean, parse_date, parse_salary
 
 ATS = "bamboohr"
 

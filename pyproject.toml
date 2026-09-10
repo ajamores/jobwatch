@@ -1,7 +1,7 @@
 [project]
-name = "browser-use-lab"
+name = "job-watch"
 version = "0.1.0"
-description = "Add your description here"
+description = "Two job watches: hiring.cafe's wide net, and named employers' own boards"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

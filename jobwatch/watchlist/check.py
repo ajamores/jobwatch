@@ -3,13 +3,13 @@
 This is the fast half of the job watch. Nothing here needs a browser, so it can run on a
 short timer; hiring.cafe stays on its slow schedule as the wide net.
 
-    python sites.py                      check everything, record what was seen
-    python sites.py --only bamboohr      one vendor
-    python sites.py --site jobs.toronto.ca
-    python sites.py --no-state           do not touch seen_sites.json (dry look)
-    python sites.py --reset              forget seen_sites.json first
+    python -m jobwatch.watchlist.check                      everything
+    python -m jobwatch.watchlist.check --only bamboohr      one vendor
+    python -m jobwatch.watchlist.check --site jobs.toronto.ca
+    python -m jobwatch.watchlist.check --no-state           do not record what was seen
+    python -m jobwatch.watchlist.check --reset              forget seen_sites.json first
 
-Deliberately unlike parse.py, there is no age filter: a posting that has been open since
+Deliberately unlike the hiring.cafe parse, there is no age filter: a posting that has been open since
 2024 is still worth seeing once. "New" means new to seen_sites.json.
 """
 
@@ -20,11 +20,10 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-from sources import ADAPTERS, parse_watchlist
-from sources import filters as filt
-from sources.http import Unavailable
-
-HERE = Path(__file__).parent
+from ..paths import CONFIG, DATA
+from . import ADAPTERS, parse_watchlist
+from . import filters as filt
+from .http import Unavailable
 
 
 def check(site):
@@ -40,18 +39,18 @@ def check(site):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("watchlist", nargs="?", default=str(HERE / "watchlist.txt"))
-    ap.add_argument("--out", default="sites_jobs.json")
-    ap.add_argument("--state", default="seen_sites.json")
-    ap.add_argument("--new-out", default="new_sites.json")
+    ap.add_argument("watchlist", nargs="?", default=str(CONFIG / "watchlist.txt"))
+    ap.add_argument("--out", default=str(DATA / "sites_jobs.json"))
+    ap.add_argument("--state", default=str(DATA / "seen_sites.json"))
+    ap.add_argument("--new-out", default=str(DATA / "new_sites.json"))
     ap.add_argument("--no-state", action="store_true")
     ap.add_argument("--reset", action="store_true", help="forget the state file first")
     ap.add_argument("--only", help="one vendor, e.g. bamboohr")
     ap.add_argument("--site", help="one host from the watchlist")
     ap.add_argument("--workers", type=int, default=6)
-    ap.add_argument("--filters", default=str(HERE / "filters.txt"),
+    ap.add_argument("--filters", default=str(CONFIG / "filters.txt"),
                     help="relevance rules; 'none' to keep everything")
-    ap.add_argument("--suppress", default="jobs.json",
+    ap.add_argument("--suppress", default=str(DATA / "jobs.json"),
                     help="hide postings already reported by the hiring.cafe run; "
                          "'none' to disable")
     args = ap.parse_args()
@@ -158,4 +157,5 @@ def main():
             print(f"  {site.label} — {err[:90]}")
 
 
-main()
+if __name__ == "__main__":
+    main()

@@ -6,14 +6,16 @@ here can invent a value or go stale when the markup changes.
 Also tracks which postings have been seen before (seen.json), so a scheduled run can
 report only what is new.
 
-    python parse.py [jobs_raw.json] [--location "Toronto,Hamilton"] [--workplace Remote]
-                    [--max-age 7] [--salary-min 90000] [--category "Quality Assurance"]
+    python -m jobwatch.hiringcafe.parse [--location "Toronto,Hamilton"] [--workplace Remote]
+                                        [--max-age 7] [--salary-min 90000]
 """
 
 import argparse
 import json
 import time
 from pathlib import Path
+
+from ..paths import DATA
 
 DAY_MS = 86_400_000
 
@@ -98,11 +100,11 @@ def flatten(hit):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("raw", nargs="?", default="jobs_raw.json")
-    ap.add_argument("--out", default="jobs.json")
-    ap.add_argument("--state", default="seen.json")
+    ap.add_argument("raw", nargs="?", default=str(DATA / "jobs_raw.json"))
+    ap.add_argument("--out", default=str(DATA / "jobs.json"))
+    ap.add_argument("--state", default=str(DATA / "seen.json"))
     ap.add_argument("--no-state", action="store_true")
-    ap.add_argument("--new-out", default="new.json")
+    ap.add_argument("--new-out", default=str(DATA / "new.json"))
     ap.add_argument("--category", default="all",
                     help='job_category to keep; default "all" because search.py already '
                          'filters server-side via departments')
@@ -158,4 +160,5 @@ def main():
               f"{j['salary']['text'] or ''}")
 
 
-main()
+if __name__ == "__main__":
+    main()

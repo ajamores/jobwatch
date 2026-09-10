@@ -76,19 +76,41 @@ still unsolved.
 
 ## Pipeline
 
-| File | Does |
-|---|---|
-| `run.py` | browser-use agent runner. `--task-file`, `--url` (deterministic pre-nav), `--vision`, `--headful`, `--steps`, `--profile`. Has a fallback LLM and `llm_timeout=180`. |
-| `chrome.py` | Finds Chrome. `CHROME_PATH` wins, else the first known location that exists (macOS app bundle, then the Linux paths). |
-| `watch.sh` | One whole check: scrape → parse → notify. `--no-mail` prints instead of emailing, `--reset` forgets `seen.json`. Portable — skips the display exports on macOS, resolves its own directory. |
-| `search.py` | Builds `search_url.txt` from plain English via hiring.cafe's own `/api/ai-search/parse-filters`. `--show` explains the current one. |
-| `scrape.py` | No agent. Headed Chrome clears Cloudflare, then `fetch()`es `/_next/data/<buildId>/index.json?searchState=…&page=N` from inside the page until `ssrIsLastPage`. Writes every raw hit to `jobs_raw.json`. |
-| `parse.py` | `jobs_raw.json` → `jobs.json`. Field selection from structured JSON — no string parsing left. Dedupes on `collapse_key`, drops expired, filters to `--category "Software Development"` (`--category all` to keep everything), sorts newest first. Diffs against `seen.json` and writes the unseen ones to `new.json`. |
-| `score.py` | **Out of scope.** Job-fit scoring against a personal profile. Ignore unless you want it back. |
-| `netwatch.py` | CDP network recorder. Enables `Network` before navigation, dumps every xhr/fetch body to `netlog/`. Used for the API check. |
-| `example.py` | Minimal browser-use hello-world. |
+```
+jobwatch/
+  paths.py          where everything lives, anchored to the repo not the cwd
+  chrome.py         finds Chrome
+  notify.py         emails a digest
+  export.py         CSV for Sheets
+  hiringcafe/       search → scrape → parse        the wide net, needs a browser
+  watchlist/        check + adapters/              named employers, no browser
+bin/                watch.sh, watch-sites.sh       the two scheduled entry points
+config/             watchlist.txt, filters.txt, profile.md, searches/
+data/               state and generated output — gitignored, disposable
+exports/            spreadsheets — gitignored
+docs/               this file, unresolved.txt
+```
 
-**Run order: `search.py "…"` (only when the search changes) → `scrape.py` → `parse.py`.**
+Everything is a module, so it runs as `python -m jobwatch.<thing>` from the repo root.
+
+| Module | Does |
+|---|---|
+| `jobwatch.paths` | `ROOT`, `CONFIG`, `DATA`, `EXPORTS`. Cron hands a script an unhelpful `cwd`, so no path in this project is relative. |
+| `jobwatch.chrome` | Finds Chrome. `CHROME_PATH` wins, else the first known location that exists (macOS app bundle, then the Linux paths). |
+| `bin/watch.sh` | One whole hiring.cafe check: scrape → parse → notify. `--no-mail` prints instead of emailing, `--reset` forgets `data/seen.json`. Portable — skips the display exports on macOS, resolves the repo root from its own path. |
+| `bin/watch-sites.sh` | One whole watchlist check: check → notify. No browser, so no display variables and no Cloudflare. |
+| `jobwatch.hiringcafe.search` | Builds `data/search_url.txt` from plain English via hiring.cafe's own `/api/ai-search/parse-filters`. `--show` explains the current one. |
+| `jobwatch.hiringcafe.scrape` | No agent. Headed Chrome clears Cloudflare, then `fetch()`es `/_next/data/<buildId>/index.json?searchState=…&page=N` from inside the page until `ssrIsLastPage`. Writes every raw hit to `data/jobs_raw.json`. |
+| `jobwatch.hiringcafe.parse` | `jobs_raw.json` → `jobs.json`. Field selection from structured JSON — no string parsing left. Dedupes on `collapse_key`, drops expired, filters to `--category "Software Development"` (`--category all` to keep everything), sorts newest first. Diffs against `data/seen.json` and writes the unseen ones to `data/new.json`. |
+| `jobwatch.watchlist.check` | Every employer in `config/watchlist.txt`, in parallel, through the vendor adapters. No age filter; "new" means new to `data/seen_sites.json`. |
+| `jobwatch.watchlist.adapters` | One module per job-board vendor — `bamboohr`, `greenhouse`, `successfactors`. Employers rent their careers pages rather than build them, so a handful of adapters covers the whole watchlist. |
+
+Removed in the 2026-09-09 cleanup: `run.py` (browser-use agent runner), `example.py`
+(hello-world), `score.py` (job-fit scoring against hardcoded indices), `netwatch.py` (the
+CDP recorder that found the SSR endpoint — its findings are the API section below), and
+`main.py`. All of them are in git history if ever wanted back.
+
+**Run order: `search` (only when the search changes) → `scrape` → `parse`.**
 
 Headed is not optional. Headless Chrome never clears the challenge, so `__NEXT_DATA__`
 never appears and the run dies at `buildId`. Retested 2026-09-08 against the endpoint —
@@ -96,9 +118,10 @@ same result. `user_data_dir` is ignored by browser-use 0.13 (it logs "Created ne
 in temp directory"), so every run clears Cloudflare from scratch; there is no warm profile
 to lean on.
 
-**Neither script uses an LLM.** No API key, no DeepSeek, no tokens — verified by running both
-with `DEEPSEEK_API_KEY` unset. `run.py`, `example.py`, `score.py` and `profile.md` are the
-LLM-driven experiments and are not needed to scrape.
+**Nothing here uses an LLM.** No API key, no DeepSeek, no tokens — verified by running the
+whole pipeline with `DEEPSEEK_API_KEY` unset. The LLM-driven experiments were deleted in
+the 2026-09-09 cleanup; `config/profile.md` survives because the Claude Code skill reads
+it to judge fit, not because any script needs it.
 
 ## Results (2026-09-08, API pipeline)
 
@@ -109,7 +132,7 @@ outputs, kept only for comparison.
 Category spread across the 131: Software Development 89, Engineering 12, R&D 8, Sales 5,
 QA 3, then singles. The `searchQuery` is fuzzy semantic matching, so a gold mine's Short
 Range Planning Engineer and a wastewater graduate programme both survive it — hence the
-`job_category` filter in `parse.py`.
+`job_category` filter in `hiringcafe/parse.py`.
 
 Of the 89: 53 Mid Level / 36 Entry Level, 36 Remote / 29 Hybrid / 24 Onsite, 64 with a
 salary band.
@@ -132,18 +155,19 @@ Ontario or the UK. Nature Fresh Farms is the right sector but onsite in Leamingt
 `/api/ai-search/parse-filters?query=<plain English>` is hiring.cafe's own natural-language
 filter parser (Gemini 2.5 Flash behind it). It returns a `suggestedFilters` object with a
 proper `locations[]` entry — including the internal `id` and geometry, which cannot be
-hand-written. `search.py` asks it, merges the standing defaults, and writes the URL.
+hand-written. `hiringcafe/search.py` asks it, merges the standing defaults, and writes the URL.
 
 ```
-python search.py "software developer jobs in Ontario Canada"
-python search.py "qa engineer jobs near Hamilton Ontario" --radius 60 --out searches_qa_hamilton.txt
-python search.py --show
+python -m jobwatch.hiringcafe.search "software developer jobs in Ontario Canada"
+python -m jobwatch.hiringcafe.search "qa engineer jobs near Hamilton Ontario" --radius 60 \
+       --out config/searches/qa-hamilton.txt
+python -m jobwatch.hiringcafe.search --show
 ```
 
 **`departments` is a real searchState key and it is exact.** Ontario + `departments:
 ["Quality Assurance"]` returns 46 hits, every one of them Quality Assurance. The fuzzy
 `searchQuery` returns 61 of 63 on-target plus a gold mine's Short Range Planning Engineer.
-`search.py` therefore drops the free text and filters on departments alone — pass
+`search` therefore drops the free text and filters on departments alone — pass
 `--keep-query` to put the text back for a wider, fuzzier net.
 
 Department values seen so far: Software Development, Quality Assurance, Engineering,
@@ -158,14 +182,14 @@ Skilled Trades - Maintenance and Repair.
 |---|---|
 | `flexible_regions: [anywhere_in_country, anywhere_in_continent, anywhere_in_world]` | **Worth 136 results vs 102.** Admits postings listed as "anywhere in Canada" or worldwide-remote. On by default; `--strict-location` drops it. |
 | `radius` / `radius_unit` | Only meaningful for a `locality`. Hamilton at 50mi → 90 jobs, at 10mi → 0. |
-| `radius` on a province | Meaningless — Ontario's centroid is ~500km north of anywhere anyone works. `search.py` strips it for `administrative_area_level_*` and `country`. |
+| `radius` on a province | Meaningless — Ontario's centroid is ~500km north of anywhere anyone works. `search` strips it for `administrative_area_level_*` and `country`. |
 
 parse-filters returns `radius: 50` on provinces regardless. That is what silently costs 34
 results if left alone.
 
 ## Filtering the results
 
-`parse.py` narrows client-side, after the server has filtered:
+`parse` narrows client-side, after the server has filtered:
 `--location "Toronto,Hamilton"` (matches formatted location, cities, states, countries),
 `--workplace Remote,Hybrid`, `--max-age 7`, `--salary-min 90000`, `--category "…"`.
 
@@ -174,26 +198,28 @@ results if left alone.
 collapse keys, which is how Citi appeared three times and Sun Life twice. Company+title is
 the fallback key.
 
-`seen.json` records what has already been reported, so a scheduled run only surfaces what
+`data/seen.json` records what has already been reported, so a scheduled run only surfaces what
 is new. It is keyed on the filtered set — **change the filters and the next run reports a
 burst of "new" jobs that are not actually new.** Keep the cron's flags fixed.
 
 ## Automation
 
 ```
-watch.sh  →  scrape.py  →  parse.py <fixed filters>  →  notify.py
+bin/watch.sh        →  scrape  →  parse <fixed filters>  →  notify
+bin/watch-sites.sh  →  check   →  notify
 ```
 
-**Currently manual.** Run `./watch.sh --no-mail` to check by hand.
+**Currently manual.** Run either with `--no-mail` to check by hand.
 
 The crontab entry exists but is **paused as of 2026-09-08** — the schedule is moving to
 the old MacBook, which can stay awake without WSL being open:
 
 ```
-#PAUSED 0 8,11,14,17,20,23 * * * /home/you/hiringcafe-watch/watch.sh
+#PAUSED 0 8,11,14,17,20,23 * * * /home/you/hiringcafe-watch/bin/watch.sh
+#        */15 * * * *              /home/you/hiringcafe-watch/bin/watch-sites.sh
 ```
 
-Cron hands a script almost no environment, so on Linux/WSL `watch.sh` exports `DISPLAY`,
+Cron hands a script almost no environment, so on Linux/WSL `bin/watch.sh` exports `DISPLAY`,
 `WAYLAND_DISPLAY` and `XDG_RUNTIME_DIR` explicitly — without them Chrome cannot reach
 WSLg and the run dies. It skips all three on macOS, where they are meaningless.
 
@@ -210,12 +236,12 @@ git clone https://github.com/ajamores/hiringcafe-watch
 cd hiringcafe-watch && uv sync
 ```
 
-1. Install Chrome if it is not there. `chrome.py` finds it at any of the usual Linux
+1. Install Chrome if it is not there. `jobwatch/chrome.py` finds it at any of the usual Linux
    paths; set `CHROME_PATH` in `.env` if it is somewhere unusual.
 2. **Copy `.env` across by hand** — it is gitignored and will not come with the clone.
-3. `seen.json` *is* committed, so the clone starts with this machine's history and will
-   not email the back catalogue. It is the one piece of state deliberately tracked in git.
-   Only ever schedule it on one machine, or the two will fight over that file.
+3. **Copy `data/` across too, or the first run emails the back catalogue.** State is no
+   longer tracked in git — it churns every run and is per-machine — so a fresh clone has
+   an empty history and everything looks new. Only ever schedule this on one machine.
 4. A headed browser needs a display. If the MacBook runs headless — no desktop session —
    cron will have no `DISPLAY` and Chrome will not start. Either leave it logged into a
    desktop, or run an X server (`Xvfb :99` and `DISPLAY=:99`) — untested, and Cloudflare
@@ -223,7 +249,7 @@ cd hiringcafe-watch && uv sync
 5. `crontab -e`, the line from above with the new path.
 6. Stop it sleeping, or the runs will not happen.
 
-`notify.py` emails the contents of `new.json` as an HTML digest — title, company,
+`jobwatch.notify` emails the contents of `data/new.json` as an HTML digest — title, company,
 location, salary band, workplace type, seniority, YOE, tech stack, and a direct link to
 the employer's own apply page (not hiring.cafe's). It sends nothing when nothing is new.
 
@@ -235,22 +261,22 @@ GMAIL_APP_PASSWORD=<16 chars from myaccount.google.com/apppasswords>
 ```
 
 That is a Google **app password**, not the account password, and it needs 2FA enabled on
-the account. `notify.py --dry-run` prints the digest without sending.
+the account. `python -m jobwatch.notify --dry-run` prints the digest without sending.
 
 ## Claude Code
 
 `.claude/skills/jobs/SKILL.md` is the conversational path — "QA jobs near Hamilton",
-"anything new?" It drives these same scripts and reads results against `profile.md`; it
+"anything new?" It drives these same modules and reads results against `config/profile.md`; it
 does not reimplement any of the scraping.
 
-The split is deliberate: `watch.sh` is the scheduled path and stays a plain shell script,
+The split is deliberate: `bin/watch.sh` is the scheduled path and stays a plain shell script,
 because a cron run at 3am should not need a model in the loop. The skill is for sitting
 down to apply, where the work is judgment rather than fetching.
 
 ## Known gaps
 
 1. ~~**Pagination — 40 of ~186.**~~ Solved — see the API check below.
-2. ~~**Query is baked into `search_url.txt`.**~~ Solved — `search.py` builds it.
+2. ~~**Query is baked into `search_url.txt`.**~~ Solved — `search` builds it.
 3. **Headed only.** Every scheduled run opens a visible Chrome window for ~15s.
 4. `ssrTotalCount` overstates slightly (136 reported, 126 hits returned). Not chased.
 
@@ -258,7 +284,7 @@ down to apply, where the work is judgment rather than fetching.
 
 There is no XHR search call to intercept. hiring.cafe is **Next.js SSR**: the full result
 set is embedded in the page's `__NEXT_DATA__` script tag, not fetched by the client.
-`netwatch.py` logged all 110 requests on a filtered load — the only same-origin fetches
+The CDP recorder logged all 110 requests on a filtered load — the only same-origin fetches
 were `api/getCountry`, `api/ai-search/parse-filters`, and an empty `_next/data` ping. No
 service worker, no websocket.
 
@@ -306,10 +332,10 @@ hourly min+max, currency, frequency, `is_compensation_transparent`), `seniority_
 requirements, `visa_sponsorship`, benefits flags, `estimated_publish_date_millis`.
 
 **Verdict: finish this scraper, drop Firecrawl.** Firecrawl was only ever worth it to fix
-fragile text parsing — this removes the parsing entirely. `parse.py` becomes field
+fragile text parsing — this removes the parsing entirely. `parse` becomes field
 selection from JSON instead of regex over `innerText`.
 
-**Done:** `scrape.py` and `parse.py` now run on this endpoint.
+**Done:** `scrape` and `parse` now run on this endpoint.
 
 Pages do not return `ssrPageSize` hits — 63, 57, 48, 11 for this search — because hits
 carry dedup siblings. 179 hits collapse to 131 cards against a reported `ssrTotalCount`
@@ -320,11 +346,11 @@ of 189; the ES total counts something slightly different. Not worth chasing.
 Ontario · Software Development · Entry + Mid · Full Time · last 14 days · flexible regions.
 136 jobs at 82 companies as of 2026-09-08.
 
-`search_url.txt` holds it; `searches_qa_hamilton.txt` is a second saved search (QA within
-60mi of Hamilton). Neither needs to be hand-edited any more — `search.py` writes them, and
-`search.py --show` explains whichever one you point it at.
+`data/search_url.txt` holds it; `config/searches/qa-hamilton.txt` is a second saved search
+(QA within 60mi of Hamilton). Neither needs to be hand-edited any more — `search` writes
+them, and `search --show` explains whichever one you point it at.
 
 ```
-python search.py --show
-python search.py --show --out searches_qa_hamilton.txt
+python -m jobwatch.hiringcafe.search --show
+python -m jobwatch.hiringcafe.search --show --out config/searches/qa-hamilton.txt
 ```

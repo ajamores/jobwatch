@@ -16,8 +16,8 @@ token where other adapters carry a hostname:
 import re
 from html import unescape
 
-from . import http
-from .schema import blank, clean, parse_date, parse_salary
+from .. import http
+from ..schema import blank, clean, parse_date, parse_salary
 
 ATS = "greenhouse"
 

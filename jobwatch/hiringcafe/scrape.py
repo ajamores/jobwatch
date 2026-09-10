@@ -8,7 +8,7 @@ here.
 Cloudflare 403s that endpoint for curl, so it is called with fetch() from inside a headed
 Chrome page that has already cleared the challenge.
 
-    python scrape.py [search_url.txt] [--out jobs_raw.json] [--max-pages N]
+    python -m jobwatch.hiringcafe.scrape [data/search_url.txt] [--out ...] [--max-pages N]
 """
 
 import argparse
@@ -20,7 +20,8 @@ from urllib.parse import urlparse, parse_qs
 
 from browser_use import Browser
 
-from chrome import executable_path
+from ..chrome import executable_path
+from ..paths import DATA
 
 
 JS_BUILD_ID = "JSON.parse(document.getElementById('__NEXT_DATA__').textContent).buildId"
@@ -44,8 +45,8 @@ JS_FETCH_PAGE = r"""
 
 async def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("url_file", nargs="?", default="search_url.txt")
-    ap.add_argument("--out", default="jobs_raw.json")
+    ap.add_argument("url_file", nargs="?", default=str(DATA / "search_url.txt"))
+    ap.add_argument("--out", default=str(DATA / "jobs_raw.json"))
     ap.add_argument("--max-pages", type=int, default=25)
     ap.add_argument("--headful", action="store_true", default=True)
     args = ap.parse_args()
@@ -111,4 +112,5 @@ async def main():
         await browser.kill()
 
 
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())

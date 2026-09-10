@@ -5,9 +5,9 @@ behind it) that turns "qa engineer jobs in Hamilton Ontario" into a proper filte
 including a location with the internal id and a radius, which cannot be hand-written.
 This asks it, merges in the standing defaults, and writes the search URL.
 
-    python search.py "qa engineer jobs in Hamilton Ontario" --radius 50
-    python search.py "software developer" --departments "Software Development" --days 7
-    python search.py --show                 # just print what search_url.txt currently means
+    python -m jobwatch.hiringcafe.search "qa engineer jobs in Hamilton Ontario" --radius 50
+    python -m jobwatch.hiringcafe.search "software developer" --departments "Software Development"
+    python -m jobwatch.hiringcafe.search --show     # what the saved search currently means
 """
 
 import argparse
@@ -19,7 +19,8 @@ from urllib.parse import quote, urlparse, parse_qs
 
 from browser_use import Browser
 
-from chrome import executable_path
+from ..chrome import executable_path
+from ..paths import DATA
 
 HOME = "https://hiringcafe.com/"
 
@@ -80,7 +81,7 @@ def csv(v):
 async def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("query", nargs="?", help="plain English, e.g. 'qa jobs in Hamilton'")
-    ap.add_argument("--out", default="search_url.txt")
+    ap.add_argument("--out", default=str(DATA / "search_url.txt"))
     ap.add_argument("--show", action="store_true", help="print the current --out and exit")
     ap.add_argument("--departments", help="override, comma-separated")
     ap.add_argument("--locations", help='override with "any" to drop location filtering')
@@ -172,4 +173,5 @@ async def main():
         await browser.kill()
 
 
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())

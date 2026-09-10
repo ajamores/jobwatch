@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
 # One pass over watchlist.txt: check every employer directly, email what is new.
 #
-#   ./watch_sites.sh              check, email the new ones
-#   ./watch_sites.sh --no-mail    same, but just print them
-#   ./watch_sites.sh --reset      forget seen_sites.json first
+#   bin/watch-sites.sh              check, email the new ones
+#   bin/watch-sites.sh --no-mail    same, but just print them
+#   bin/watch-sites.sh --reset      forget data/seen_sites.json first
 #
 # No browser, no Cloudflare, no display variables — that is the whole point of this
-# path, and why it is safe to run on a short timer. watch.sh remains the slow, wide
+# path, and why it is safe to run on a short timer. bin/watch.sh remains the slow, wide
 # hiring.cafe sweep.
 set -euo pipefail
 
-cd "$(dirname "$(readlink -f "$0")")"
+ROOT="$(dirname "$(dirname "$(readlink -f "$0")")")"
+cd "$ROOT"
 
-PY="$(dirname "$(readlink -f "$0")")/.venv/bin/python"
+PY="$ROOT/.venv/bin/python"
 [[ -x "$PY" ]] || PY="$(command -v python3)"
 
 MAIL=1
@@ -26,10 +27,10 @@ for arg in "$@"; do
 done
 
 echo "=== $(date '+%F %T') · watchlist ==="
-"$PY" sites.py "${ARGS[@]+"${ARGS[@]}"}"
+"$PY" -m jobwatch.watchlist.check "${ARGS[@]+"${ARGS[@]}"}"
 
 if [[ "$MAIL" == "1" ]]; then
-  "$PY" notify.py new_sites.json --label "watchlist · your bookmarked employers"
+  "$PY" -m jobwatch.notify data/new_sites.json --label "watchlist · your bookmarked employers"
 else
   echo "(--no-mail: skipping the email)"
 fi
