@@ -8,3 +8,6 @@ data/
 
 # spreadsheets, meant for a human rather than for git
 exports/
+
+# personal: CV, salary target — the template is config/profile.example.md
+config/profile.md

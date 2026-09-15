@@ -94,7 +94,7 @@ newest first; `new.json` and `new_sites.json` are the subsets not seen before. E
 YOE, a structured salary band, tech stack, a requirements summary, and `apply_url` — the
 employer's own posting, which is where he applies.
 
-Lead with what is worth his time, not with a table of everything. `config/profile.md` holds his
+Lead with what is worth his time, not with a table of everything. `config/profile.md` (gitignored; template in `profile.example.md`) holds his
 background; read it and say which postings actually fit and which are a stretch. Name the
 salary and the location for each — those are the two things he screens on. Link
 `apply_url`, never a hiring.cafe URL.

@@ -29,7 +29,7 @@ jobwatch/           the code, importable as a package
   watchlist/        check + fingerprint + one adapter per job-board vendor
   notify.py  export.py  chrome.py  paths.py
 bin/                the two scheduled entry points
-config/             watchlist.txt, filters.txt, profile.md, searches/
+config/             watchlist.txt, filters.txt, profile.example.md, searches/
 data/               state and generated output — disposable, gitignored
 exports/            spreadsheets — gitignored
 docs/               NOTES.md, unresolved.txt, census.tsv

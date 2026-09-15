@@ -85,7 +85,7 @@ jobwatch/
   hiringcafe/       search → scrape → parse        the wide net, needs a browser
   watchlist/        check + adapters/              named employers, no browser
 bin/                watch.sh, watch-sites.sh       the two scheduled entry points
-config/             watchlist.txt, filters.txt, profile.md, searches/
+config/             watchlist.txt, filters.txt, profile.example.md, searches/
 data/               state and generated output — gitignored, disposable
 exports/            spreadsheets — gitignored
 docs/               this file, unresolved.txt
@@ -121,7 +121,8 @@ to lean on.
 **Nothing here uses an LLM.** No API key, no DeepSeek, no tokens — verified by running the
 whole pipeline with `DEEPSEEK_API_KEY` unset. The LLM-driven experiments were deleted in
 the 2026-09-09 cleanup; `config/profile.md` survives because the Claude Code skill reads
-it to judge fit, not because any script needs it.
+it to judge fit, not because any script needs it. It is gitignored — copy
+`config/profile.example.md` to start one.
 
 ## Results (2026-09-08, API pipeline)
 
