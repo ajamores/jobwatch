@@ -216,8 +216,8 @@ The crontab entry exists but is **paused as of 2026-09-08** — the schedule is 
 the old MacBook, which can stay awake without WSL being open:
 
 ```
-#PAUSED 0 8,11,14,17,20,23 * * * /home/you/hiringcafe-watch/bin/watch.sh
-#        */15 * * * *              /home/you/hiringcafe-watch/bin/watch-sites.sh
+#PAUSED 0 8,11,14,17,20,23 * * * /home/you/jobwatch/bin/watch.sh
+#        */15 * * * *              /home/you/jobwatch/bin/watch-sites.sh
 ```
 
 Cron hands a script almost no environment, so on Linux/WSL `bin/watch.sh` exports `DISPLAY`,
@@ -233,8 +233,8 @@ The MacBook runs Linux, not macOS, so this is the same setup as here — no app 
 paths, no `caffeinate`.
 
 ```bash
-git clone https://github.com/ajamores/hiringcafe-watch
-cd hiringcafe-watch && uv sync
+git clone https://github.com/ajamores/jobwatch
+cd jobwatch && uv sync
 ```
 
 1. Install Chrome if it is not there. `jobwatch/chrome.py` finds it at any of the usual Linux

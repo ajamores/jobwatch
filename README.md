@@ -1,7 +1,9 @@
-# job watch
+# jobwatch
 
-Two streams, both reporting only what is new, neither with an LLM anywhere near the
-extraction — every field comes out of structured JSON or a vendor's own template.
+Watches for new job postings around Hamilton, Ontario, from two sources: hiring.cafe, an
+aggregator, and the careers pages of 75 employers checked directly. Each run reports only
+what it has not seen before. No LLM touches the extraction. Every field comes from
+structured JSON or from a vendor's own page template.
 
 ```bash
 bin/watch.sh --no-mail          # the wide net: hiring.cafe. Needs Chrome, takes a minute
@@ -11,15 +13,15 @@ bin/watch-sites.sh --no-mail    # the fast one: your bookmarked employers, no br
 | | `watch.sh` | `watch-sites.sh` |
 |---|---|---|
 | Source | hiring.cafe, an aggregator | employers' own careers pages |
-| Needs a browser | yes — headed Chrome, Cloudflare | no |
+| Needs a browser | yes, a headed Chrome to get past Cloudflare | no |
 | Realistic cadence | a few times a day | every 15 minutes |
-| Coverage | wide, everyone | only who you list |
-| Freshness | behind hiring.cafe's own crawl | first-hand |
+| Coverage | wide | only the employers you list |
+| Freshness | as current as hiring.cafe's last crawl | first-hand |
 | State | `data/seen.json` | `data/seen_sites.json` |
 
-The second exists because an aggregator is always at least one crawl behind. Going
-straight to the employer removes that lag, and a request to a plain careers API costs so
-little that it can run on a short timer.
+An aggregator is always at least one crawl behind, which is why the second stream exists.
+Asking the employer directly removes the lag, and a request to a plain careers API is cheap
+enough to run on a short timer.
 
 ## Layout
 
@@ -35,13 +37,13 @@ exports/            spreadsheets — gitignored
 docs/               NOTES.md, unresolved.txt, census.tsv
 ```
 
-Everything runs as a module from the repo root: `python -m jobwatch.watchlist.check`.
-Nothing resolves a path relative to the working directory, so cron and the shell are
-equally safe.
+Everything runs as a module from the repo root, for example
+`python -m jobwatch.watchlist.check`. No path is resolved relative to the working directory,
+so the scripts behave the same under cron as in a shell.
 
-**`data/` is not in git.** It churns on every run and it is per-machine. Clone this
-somewhere new and the first run will report the entire back catalogue as new — copy
-`data/` across by hand, or accept one noisy run.
+`data/` is not in git, because it changes on every run and belongs to one machine. On a
+fresh clone the first run reports the whole back catalogue as new. Copy `data/` across by
+hand or accept one noisy run.
 
 ## Setup
 
@@ -49,10 +51,10 @@ somewhere new and the first run will report the entire back catalogue as new —
 uv sync
 ```
 
-Needs a real Chrome. Headless never clears Cloudflare, so every run of the hiring.cafe
-stream opens a visible browser window for about fifteen seconds — that is expected, not a
-bug. Chrome is located automatically; set `CHROME_PATH` in `.env` if it lives somewhere
-unusual. The watchlist stream needs no browser at all.
+The hiring.cafe stream needs a real Chrome. Headless Chrome never clears Cloudflare, so each
+run opens a visible browser window for about fifteen seconds, which is expected. Chrome is
+found automatically; set `CHROME_PATH` in `.env` if yours is somewhere unusual. The
+watchlist stream needs no browser.
 
 For email digests, add to `.env`:
 
@@ -62,12 +64,16 @@ GMAIL_APP_PASSWORD=abcdefghijklmnop
 ```
 
 That is a Google [app password](https://myaccount.google.com/apppasswords), not your
-account password, and the account needs 2FA. Skip it and use `--no-mail`.
+account password, and the account needs 2FA. Without it, run with `--no-mail`.
+
+No script reads a candidate profile. The Claude Code skill in `.claude/skills/jobs/` does,
+to judge which postings fit, so copy `config/profile.example.md` to `config/profile.md` if
+you use it.
 
 ## The watchlist
 
-`config/watchlist.txt` is the list of employers checked directly. Adding one is a line,
-not code:
+`config/watchlist.txt` lists the employers checked directly. Adding one takes a line of
+text:
 
 ```
 ats             host                          label                     extras
@@ -78,28 +84,28 @@ ukg             recruiting.ultipro.ca         Meridian Credit Union     tenant=M
 adp             workforcenow.adp.com          City of Markham           cid=04bf51f8-...,where=Markham
 ```
 
-The trick is that employers do not build careers pages, they rent them. The 75
-employers here use 6 vendors between them, so there are 6 adapters in
-`jobwatch/watchlist/adapters/` rather than 75 scrapers. That ratio is the whole
-design, and it is why adding an employer is usually a line rather than a day.
+Most employers rent their careers page from a vendor. The 75 employers here use 6 vendors
+between them, so `jobwatch/watchlist/adapters/` holds 6 adapters, and adding an employer on
+a vendor that already has one is usually a single line.
 
-Extras ride at the end of the line, comma-separated:
+Extras go at the end of the line, separated by commas:
 
 | Extra | Vendor | What it is |
 |---|---|---|
 | `path=` | SuccessFactors | the career-site prefix, for tenants that use one |
 | `site=` | Workday | the board's own path segment |
 | `tenant=` | Workday | only for tenants on the shared `myworkdaysite.com` host |
-| `facet=<param>:<id>` | Workday | narrows a global board server-side — Magna is 1,428 postings worldwide and 203 in Canada |
+| `facet=<param>:<id>` | Workday | narrows a global board on the server. Magna has 1,428 postings worldwide and 203 in Canada |
 | `tenant=`, `board=` | UKG | several tenants share the one host |
 | `cid=` | ADP | every tenant is on the one host, told apart by client id |
-| `where=` | any | the employer's town, for boards that print a building — "Town Hall", "Lake Erie Works" — instead of a place. The `@` filter would otherwise drop every one of them |
+| `where=` | any | the employer's town, for boards that list a building ("Town Hall", "Lake Erie Works") where a place should be. Without it the `@` filter would drop all of them |
 
-Unlike the hiring.cafe run there is **no age filter** — these employers are worth checking
-whether a posting went up today or in 2024. "New" means new to `data/seen_sites.json`.
+The hiring.cafe run has an age filter and this one does not, because these employers are
+worth checking whether a posting went up today or in 2024. A posting counts as new when it
+is not already in `data/seen_sites.json`.
 
-Relevance filtering happens instead in `config/filters.txt`, because an employer board is
-unfiltered: Canada Post alone lists 260 postings and almost all of them are letter
+Relevance is handled in `config/filters.txt` instead, since an employer board lists
+everything. Canada Post alone has 260 postings, and almost all of them are for letter
 carriers.
 
 ```
@@ -108,19 +114,18 @@ carriers.
 @ hamilton       an acceptable place; unknown locations are kept
 ```
 
-`docs/unresolved.txt` lists every employer with no adapter yet and why — vendor by
-vendor, with the reason each one resists.
+`docs/unresolved.txt` lists every employer that has no adapter yet, grouped by vendor, with
+the reason each one is still out of reach.
 
 ## The census
 
-`docs/census.tsv` is 287 institutional and overlooked employers within about 200km of
-Hamilton: hospitals, school boards, universities, libraries, municipalities, police
-services, utilities, farm mutuals, credit unions, conservation authorities. The premise is
-that none of them compete for juniors on LinkedIn. They post once, on their own board, and
-wait.
+`docs/census.tsv` lists 287 institutional and often overlooked employers within about 200km
+of Hamilton: hospitals, school boards, universities, libraries, municipalities, police
+services, utilities, farm mutuals, credit unions and conservation authorities. None of them
+compete for juniors on LinkedIn. They post once, on their own board, and wait.
 
-`jobwatch.watchlist.fingerprint` resolves each one to its real careers page and names the
-vendor, so the build order is decided by the data rather than by guesswork:
+`jobwatch.watchlist.fingerprint` finds each employer's real careers page and names the
+vendor behind it. Those counts set the order in which adapters get built.
 
 ```bash
 python -m jobwatch.watchlist.fingerprint                      # all of them
@@ -128,14 +133,15 @@ python -m jobwatch.watchlist.fingerprint --sector hospital    # one sector
 python -m jobwatch.watchlist.fingerprint --recheck-markup     # re-probe the weak matches
 ```
 
-It follows the employer's own careers link two hops, then reads the vendor off the URL it
-lands on — or failing that off a board link in the markup, which is the tenant URL an
-adapter actually needs. Results land in `data/census_vendors.tsv`.
+It follows the employer's own careers link up to two hops and reads the vendor from the URL
+it lands on. If that fails, it looks for a board link in the markup, which is also the
+tenant URL an adapter needs. Results go to `data/census_vendors.tsv`.
 
-The answer on 2026-09-11: 114 of the 287 hand-roll their careers page, and 157 rent one.
-Workday leads with 24, then ApplyToEducation with 18 — login-walled, which puts every
-public school board out of reach — SuccessFactors 15, Dayforce and ADP 11 each, UKG and
-Taleo 10. That is what chose `workday`, `ukg` and `adp` as the adapters to write.
+On 2026-09-11, 114 of the 287 had built their own careers page and 157 rented one. Workday
+led with 24. ApplyToEducation came next with 18, and because it sits behind a login, every
+public school board is out of reach. SuccessFactors had 15, Dayforce and ADP 11 each, and
+UKG and Taleo 10. Those numbers are why `workday`, `ukg` and `adp` were the adapters
+written next.
 
 ## Changing the search
 
@@ -144,8 +150,8 @@ python -m jobwatch.hiringcafe.search "qa engineer jobs near Hamilton Ontario" --
 python -m jobwatch.hiringcafe.search --show          # explain the current search
 ```
 
-`search` prints a result count before anything is scraped. Filter further at parse time
-without touching the browser:
+`search` prints a result count before anything is scraped. You can narrow the results
+further at parse time without opening the browser:
 
 ```bash
 python -m jobwatch.hiringcafe.parse --location "Toronto,Hamilton" --workplace Remote --max-age 7
@@ -155,32 +161,32 @@ python -m jobwatch.hiringcafe.parse --location "Toronto,Hamilton" --workplace Re
 
 | Module | Does |
 |---|---|
-| `hiringcafe.search` | Plain English → `data/search_url.txt`, via hiring.cafe's own filter parser |
-| `hiringcafe.scrape` | Every page of results → `data/jobs_raw.json` |
-| `hiringcafe.parse` | Flatten, filter, dedupe → `jobs.json` + `new.json`, tracked in `seen.json` |
-| `watchlist.check` | Every employer in `watchlist.txt` → `sites_jobs.json` + `new_sites.json`, tracked in `seen_sites.json` |
-| `watchlist.fingerprint` | Every employer in `docs/census.tsv` → which vendor each one rents |
-| `watchlist.adapters` | One module per job-board vendor — `adp`, `bamboohr`, `greenhouse`, `successfactors`, `ukg`, `workday` |
-| `notify` | Emails what is new. Sends nothing when nothing is new |
-| `export` | Any of those JSON files → a CSV that opens cleanly in Sheets |
-| `bin/watch.sh` | scrape → parse → notify. Cron-safe |
-| `bin/watch-sites.sh` | check → notify. No browser, safe on a short timer |
+| `hiringcafe.search` | Turns a plain-English query into `data/search_url.txt`, using hiring.cafe's own filter parser |
+| `hiringcafe.scrape` | Fetches every page of results into `data/jobs_raw.json` |
+| `hiringcafe.parse` | Flattens, filters and dedupes into `jobs.json` and `new.json`, tracked in `seen.json` |
+| `watchlist.check` | Checks every employer in `watchlist.txt`, writing `sites_jobs.json` and `new_sites.json`, tracked in `seen_sites.json` |
+| `watchlist.fingerprint` | Names the vendor behind each employer in `docs/census.tsv` |
+| `watchlist.adapters` | One module per job-board vendor: `adp`, `bamboohr`, `greenhouse`, `successfactors`, `ukg`, `workday` |
+| `notify` | Emails what is new, and sends nothing when nothing is |
+| `export` | Converts any of those JSON files to a CSV that opens cleanly in Sheets |
+| `bin/watch.sh` | Runs scrape, parse and notify. Safe under cron |
+| `bin/watch-sites.sh` | Runs check and notify. Needs no browser, so it is safe on a short timer |
 
 ## Scheduling
 
 ```
-0 8,11,14,17,20,23 * * * /path/to/browser-use/bin/watch.sh
-*/15 * * * *             /path/to/browser-use/bin/watch-sites.sh
+0 8,11,14,17,20,23 * * * /path/to/jobwatch/bin/watch.sh
+*/15 * * * *             /path/to/jobwatch/bin/watch-sites.sh
 ```
 
-Three things that will bite you. `seen.json` is keyed on the filtered set, so changing the
-filters in `watch.sh` makes the next run report a burst of jobs that are not new — and the
-same is true of `filters.txt` and `seen_sites.json`. A sleeping machine runs no cron jobs.
-And on a large board like Scotiabank's, postings shift across page boundaries between
-requests, so one occasionally surfaces a run late; state only ever accumulates, so nothing
-is reported twice.
+`seen.json` is keyed on the filtered set, so changing the filters in `watch.sh` makes the
+next run report a burst of postings that are not actually new. `filters.txt` and
+`seen_sites.json` behave the same way. Cron does nothing while the machine sleeps. On a
+large board such as Scotiabank's, postings shift across page boundaries between requests,
+so one occasionally shows up a run late. State only ever accumulates, so nothing is
+reported twice.
 
 ## Why it works the way it does
 
-`docs/NOTES.md` — the SSR endpoint, the Cloudflare constraint, why `departments` beats the
-text search, and why there is no LLM anywhere near the extraction.
+`docs/NOTES.md` covers the SSR endpoint, the Cloudflare constraint, why `departments` beats
+the text search, and why no LLM is used for extraction.
