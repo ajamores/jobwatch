@@ -1,50 +1,146 @@
-# Bookmarked employers with no adapter yet. Not a config file — a to-do list.
+# Employers with no adapter yet. Not a config file — a to-do list.
 #
-# Two different reasons, needing two different fixes.
+# Rewritten 2026-09-11 against the institutional census (docs/census.tsv, 287
+# employers within ~200km of Hamilton). The census fingerprinted every one of them,
+# so this is no longer a list of mystery pages: for most of these the vendor is known
+# and the reason it is not in watchlist.txt is specific. Counts are census rows.
 #
-# A. ANSWERED, BUT NO FINGERPRINT (17)
-#    The page loads fine, then builds its job list in the browser. A plain fetch sees an
-#    empty shell. Re-check these through the headed Chrome in scrape.py and most will
-#    reveal an ATS. Faire sat in this group until 2026-09-09 and turned out to be
-#    Greenhouse — two good postings, real dates, real salary bands.
-#
-# B. REFUSED A PLAIN SCRIPT (8)
-#    403 to urllib. Same fix — headed Chrome already clears this class of block.
+# What DID get built from the census: workday (23 employers), ukg (10), adp (10),
+# plus 9 SuccessFactors and a handful of BambooHR/Greenhouse employers that the
+# existing adapters already covered.
 
-# --- A: Golden Horseshoe. This is the gap; nothing local is reaching the results ---
-https://www.burlington.ca/en/council-and-city-administration/careers.aspx   City of Burlington
-https://www.hwdsb.on.ca/careers/                                           Hamilton-Wentworth DSB
-https://www.hdsb.ca/our-board/careers/                                     Halton DSB
-https://www.peelschools.org/careers/list                                   Peel DSB
-https://www.hpl.ca/jobs                                                    Hamilton Public Library
-https://www.redeemer.ca/about/careers/                                     Redeemer University (Ancaster)
-https://www.npei.ca/about-us/careers                                       Niagara Peninsula Energy
-https://rwdi.com/careers/                                                  RWDI (Guelph)
-https://www.johnstonequipment.com/en/careers/current-job-postings          Johnston Equipment
-https://greatsn.com/job-board/                                             GREATSN (Six Nations)
+# === A. BLOCKED BY THE VENDOR, NOT BY EFFORT ====================================
+# A browser would clear most of these. None of them will yield to a plain script.
 
-# --- A: everyone else -----------------------------------------------------------
+# --- ApplyToEducation (18) — login-walled -------------------------------------
+# Every English public school board in the radius: HWDSB, HWCDSB, HDSB, HCDSB, Peel,
+# Dufferin-Peel, DSBN, Niagara Catholic, WRDSB, WCDSB, Upper Grand, Wellington
+# Catholic, Grand Erie, BHNCDSB, TDSB, TCDSB, YRDSB, YCDSB, Durham, Simcoe, Thames
+# Valley, London Catholic, Avon Maitland, Bluewater — and St. Mildred's-Lightbourn.
+# The boards' own careers pages carry no listing at all: they say "apply on Apply to
+# Education" and link to network.applytoeducation.com/attlogin.aspx. Checked HWCDSB
+# and DSBN directly — a login, not a public board. Same bucket as Mohawk Career Ready.
+# Worth revisiting only if ATE ever exposes a public search.
+
+# --- Njoyn (6) — Radware bot wall ---------------------------------------------
+# Brant Community Healthcare, Michael Garron, Ontario Health atHome, Toronto Public
+# Library, Centennial College, Sheridan College, City of Oshawa, Legal Aid Ontario.
+# tpl.njoyn.com and bchs.njoyn.com both bounce a plain request to validate.perfdrive.com
+# with a full browser UA. Needs the headed Chrome that scrape.py already runs.
+
+# --- iCIMS (9) — 405 to a script ----------------------------------------------
+# Cambridge Memorial, Humber River, Mackenzie Health, Ontario Health atHome, City of
+# Guelph, Region of Peel, CarePartners, Hamilton International Airport (via Vantage).
+# /jobs/search answers HTTP 405 to urllib. Same fix as Njoyn.
+# (Waterloo Catholic DSB is a false positive here — the link led to a tenders site.)
+
+# --- Cloudflare/WAF on the front page (2) -------------------------------------
+# Ontario Public Service (ontario.ca) and Hydro One. The OPS board is the single
+# highest-volume employer in the whole census and worth the browser on its own.
+
+# === B. KNOWN VENDOR, ADAPTER NOT WRITTEN YET ===================================
+# Ranked by how many employers each unlocks. This is the next build queue.
+
+# --- Dayforce (11) ------------------------------------------------------------
+# Alectra, Burlington Hydro, Sinai Health, Women's College, Infrastructure Ontario,
+# Conservation Halton, TRCA, Sofina, Tigercat, Synaptive, eSentire.
+# The candidate portal is a Next.js app whose __NEXT_DATA__ carries only site-info —
+# the postings arrive in a later call this run did not capture. Find that call with
+# the CDP recorder (the same trick that found hiring.cafe's SSR endpoint) and this is
+# probably another plain JSON adapter. Highest count left.
+
+# --- Taleo Business Edition (8) -----------------------------------------------
+# St. Joseph's Health System, Town of Oakville, Oakville Public Library, City of
+# St. Catharines, Niagara College, OCAD, Seneca, Canadian Red Cross.
+# tre.tbe.taleo.net/tre01/ats/careers/v2/searchResults?org=<ORG>&cws=<N> is plain
+# server-rendered HTML — requisition ids read straight out of it (5, 10, 2 and 10
+# requisitions on the four tested). Easiest remaining win; no browser needed.
+
+# --- Taleo Enterprise (2) — but one of them is HHS ----------------------------
+# Hamilton Health Sciences and Humber Polytechnic. The REST endpoint is
+# careersection/rest/jobboard/searchjobs?portal=<id>, and Humber's URL hands over its
+# portal id (12100010168). HHS does not: its jobsearch.ftl ships <input name="portal"
+# value=""> and fills it in by script. Two employers only, but HHS is the largest
+# employer in Hamilton — worth chasing for that alone.
+
+# --- Oracle Recruiting Cloud (6) ----------------------------------------------
+# CAMH, Trillium Health Partners, Definity, WSIB, Linamar, Metrolinx.
+# fa-*.oraclecloud.com/hcmUI/CandidateExperience — has a documented public REST
+# endpoint (recruitingCEJobRequisitions). Not yet tried.
+
+# --- MediSolution eRecruit (5) ------------------------------------------------
+# Joseph Brant, Lakeridge Health, Niagara Health, Durham Region, Peel Regional Police.
+# An Ontario hospital HR product (meta author: "MediSolution (2009) Inc."), ASP.NET,
+# server-rendered, with real posted AND closing dates. Ten results a page behind a
+# WebForms postback (__EVENTTARGET=...gvwSearchResults, __EVENTARGUMENT=Page$2, plus
+# __VIEWSTATE and __EVENTVALIDATION) — doable with a cookie jar, just fiddly. Its
+# RSS.aspx is broken: 27 empty <item> tags nested inside each other, served as HTML.
+# (Wescast Industries is a false positive — "eRecruit" appeared in unrelated markup.)
+
+# --- Cornerstone (4), SmartRecruiters (4), PeopleSoft (2), Jobvite (2), JazzHR (2)
+# Cornerstone: CN, Mohawk College, Durham College, Ontario Tech.
+# SmartRecruiters: Halton Healthcare, William Osler, Michener Institute.
+# Singles worth one line each once a vendor is done: Ashby (Miovision), Lever (Magnet
+# Forensics), SilkRoad (Baycrest), Phenom (OMERS), Eightfold (Intelex), VidCruiter
+# (City of Barrie), JazzHR (County of Brant), Jobvite (VON Canada).
+
+# === C. SUCCESSFACTORS TENANTS THAT DO NOT ANSWER THE USUAL WAY =================
+# The adapter works on nine new employers. These four do not, and each fails differently.
+# careers.brampton.ca, jobs.kitchener.ca, jobs.yrp.ca — answer, but no job tiles on
+#   either /tile-search-results/ or /search/. A different SAP template; needs a look.
+# Richmond Hill Public Library — career17.sapsf.com?company=… is raw SAP, not a tenant
+#   career site, and does not take the tile URL at all.
+# Ferrero Canada — confirmed NOT SuccessFactors, again. The fingerprint keeps
+#   mis-firing on it; real vendor still unidentified.
+# CAA South Central Ontario — the link found points at an SAP *staging* host
+#   (infosyspubt1.valhalla47.stage.jobs2web.com). Find the live one.
+
+# === D. NO VENDOR AT ALL (114) ==================================================
+# Hand-built careers pages, one scraper each — which is exactly what the adapter
+# model exists to avoid. Not worth it wholesale. But note WHERE they cluster:
+#   22 libraries   14 hospitals   12 municipal   9 universities   9 tech
+#    7 school boards   7 independent schools   6 industry   5 police
+# The libraries are the striking one. Hamilton, Burlington, Milton, Halton Hills and
+# Brantford all hand-roll their careers page — hpl.ca/jobs, bpl.on.ca/about/careers,
+# hhpl.ca/careeropportunities. Small, static, and each would be perhaps 20 lines.
+# If any group here is worth bespoke scrapers, it is the local libraries: tiny IT
+# teams, few postings, and effectively no competition for them.
+
+# === E. UNREACHABLE TO A PLAIN SCRIPT (18) ======================================
+# 403s: Nestlé, Vaughan, Toronto Police, Cogeco, George Brown, Bruce Power, Elexicon.
+# Certificate chains Python rejects (curl and browsers accept): Unity Health Toronto,
+# Brock, York University, Town of Lincoln.
+# Timeouts/resets: Grand River Hospital, OpenText, St. Catharines Public Library,
+#   Kawartha Pine Ridge DSB, Stevenson Memorial (DNS).
+# 307 redirect loops: Oak Valley Health, George Weston.
+# Empty shells: Ayr Farmers Mutual, Toronto Pearson (GTAA).
+# The certificate group is the cheap fix — those four are real employers with real
+# boards and only Python is refusing them.
+
+# === F. STILL OUTSTANDING FROM THE OLD BOOKMARK LIST ============================
+# Not institutions, so the census did not cover them. Unchanged since 2026-09-09.
 https://jobs.sobeyscareers.com/                                            Sobeys
 https://jobs.cardinalhealth.com/                                           Cardinal Health
 https://www.telus.com/agcg/en-ca/careers/positions                         TELUS Agriculture
 https://answernet.com/about/careers/                                       AnswerNet
-https://www.ccohs.ca/ccohs/careers                                         CCOHS
 https://careers.cse-cst.gc.ca/en/careers-carrieres/professionals-professionnels/opportunities/  CSE
 https://emploisfp-psjobs.cfp-psc.gc.ca/psrs-srfp/applicant/page2440        Public Service Commission
-
-# --- B: 403 to a plain script ---------------------------------------------------
-https://careers.manulife.com/global/en/search-results                      Manulife
-https://jobs.globalpayments.com/en/jobs/                                   Global Payments
-https://careers.mcdonalds.ca/corporate-search                              McDonald's Canada
-https://jobs.telusdigital.com/en_US/careers/                               TELUS Digital
-https://www.ziprecruiter.com/co/VC3/Jobs/-in-Toronto,ON                    VC3 via ZipRecruiter
-https://careerready.mohawkcollege.ca/myAccount/career/postings.htm         Mohawk Career Ready (login-walled)
-
-# --- B: broken bookmarks, need replacing ----------------------------------------
-https://www.brantford.ca/en/your-government/full-time-opportunities.aspx    City of Brantford (404 — page moved)
+https://www.johnstonequipment.com/en/careers/current-job-postings          Johnston Equipment
+https://greatsn.com/job-board/                                             GREATSN (Six Nations)
+https://rwdi.com/careers/                                                  RWDI (Guelph)
+https://careers.manulife.com/global/en/search-results                      Manulife (403)
+https://jobs.globalpayments.com/en/jobs/                                   Global Payments (403)
+https://careers.mcdonalds.ca/corporate-search                              McDonald's Canada (403)
+https://jobs.telusdigital.com/en_US/careers/                               TELUS Digital (403)
+https://www.ziprecruiter.com/co/VC3/Jobs/-in-Toronto,ON                    VC3 via ZipRecruiter (403)
+https://careerready.mohawkcollege.ca/myAccount/career/postings.htm         Mohawk Career Ready (login)
+https://www.appleby.on.ca/current-opportunities                            Appleby College (ADP, 403 — cid unreadable)
 https://www.workforceplanninghamilton.ca/jobs/                             Workforce Planning Hamilton (no connection)
 
-# --- Deliberately dropped -------------------------------------------------------
+# === Deliberately dropped ======================================================
 # LinkedIn saved searches x4 — login-walled, hostile to scripts, and hiring.cafe
 # already covers the same inventory.
-# Ferrero — fingerprinted as SuccessFactors, is not; /tile-search-results/ 404s.
+# French-language school boards (Viamonde, MonAvenir) — removed from the census on
+# request 2026-09-11.
+# Hamilton Oshawa Port Authority — its careers page links to a port tenant's Workday
+# board (BWC Terminals), not its own. Not HOPA's postings.

@@ -1,0 +1,441 @@
+# Institutional and overlooked employers within ~200km of Hamilton, ON.
+#
+# A candidate list, not a watchlist. Nothing here is verified yet — the domains are
+# roots, not careers pages, because guessing a careers path is how you get a wall of
+# 404s. The fingerprint pass resolves each one to its real board and names the vendor.
+#
+#   tier  sector  name  city  domain
+#
+#   tier A   <=40km    Hamilton and the immediate ring — bikeable to a 30-min drive
+#   tier B   40-100km  Niagara, KW, Guelph, Peel, Toronto
+#   tier C   100-200km Durham, York north, Barrie, London, Stratford, Peterborough
+#
+# The premise: these employers do not compete for juniors on LinkedIn. Most of them
+# post once, on their own board, and wait. An aggregator never sees it.
+
+# === HOSPITALS AND HEALTH NETWORKS ==============================================
+A	hospital	Hamilton Health Sciences	Hamilton	hamiltonhealthsciences.ca
+A	hospital	St. Joseph's Healthcare Hamilton	Hamilton	stjoes.ca
+A	hospital	St. Joseph's Health System	Hamilton	sjhs.ca
+A	hospital	Joseph Brant Hospital	Burlington	josephbranthospital.ca
+A	hospital	Halton Healthcare	Oakville	haltonhealthcare.on.ca
+A	hospital	Brant Community Healthcare System	Brantford	bchsys.org
+A	hospital	De dwa da dehs nye>s Aboriginal Health	Hamilton	aboriginalhealthcentre.com
+A	hospital	St. Joseph's Home Care	Hamilton	stjosephshomecare.ca
+A	hospital	Haldimand War Memorial Hospital	Dunnville	hwmh.ca
+B	hospital	Niagara Health	St. Catharines	niagarahealth.on.ca
+B	hospital	Grand River Hospital	Kitchener	grhosp.on.ca
+B	hospital	St. Mary's General Hospital	Kitchener	smgh.ca
+B	hospital	Cambridge Memorial Hospital	Cambridge	cmh.org
+B	hospital	Guelph General Hospital	Guelph	gghorg.ca
+B	hospital	Homewood Health	Guelph	homewoodhealth.com
+B	hospital	Groves Memorial / Wellington Health Care	Fergus	gmch.ca
+B	hospital	Norfolk General Hospital	Simcoe	ngh.on.ca
+B	hospital	Trillium Health Partners	Mississauga	thp.ca
+B	hospital	William Osler Health System	Brampton	williamoslerhs.ca
+B	hospital	Headwaters Health Care Centre	Orangeville	headwatershealth.ca
+B	hospital	University Health Network	Toronto	uhn.ca
+B	hospital	Unity Health Toronto	Toronto	unityhealth.to
+B	hospital	Sinai Health	Toronto	sinaihealth.ca
+B	hospital	The Hospital for Sick Children	Toronto	sickkids.ca
+B	hospital	Sunnybrook Health Sciences	Toronto	sunnybrook.ca
+B	hospital	Women's College Hospital	Toronto	womenscollegehospital.ca
+B	hospital	CAMH	Toronto	camh.ca
+B	hospital	Holland Bloorview	Toronto	hollandbloorview.ca
+B	hospital	Baycrest	Toronto	baycrest.org
+B	hospital	Michael Garron Hospital	Toronto	tehn.ca
+B	hospital	Humber River Health	Toronto	hrh.ca
+B	hospital	North York General	Toronto	nygh.on.ca
+B	hospital	Scarborough Health Network	Scarborough	shn.ca
+B	hospital	Mackenzie Health	Richmond Hill	mackenziehealth.ca
+B	hospital	Oak Valley Health	Markham	oakvalleyhealth.ca
+C	hospital	Southlake Health	Newmarket	southlake.ca
+C	hospital	Lakeridge Health	Oshawa	lakeridgehealth.on.ca
+C	hospital	Ontario Shores	Whitby	ontarioshores.ca
+C	hospital	Stevenson Memorial Hospital	Alliston	smhosp.ca
+C	hospital	Royal Victoria Regional Health Centre	Barrie	rvh.on.ca
+C	hospital	London Health Sciences Centre	London	lhsc.on.ca
+C	hospital	St. Joseph's Health Care London	London	sjhc.london.on.ca
+C	hospital	Peterborough Regional Health Centre	Peterborough	prhc.on.ca
+B	hospital	Ontario Health	Toronto	ontariohealth.ca
+B	hospital	Ontario Health atHome	Toronto	ontariohealthathome.ca
+B	hospital	Canadian Blood Services	Brampton	blood.ca
+
+# === K-12 SCHOOL BOARDS =========================================================
+# Expect ApplyToEducation almost everywhere. Enormous posting volume, ~95% of it
+# teaching and educational-assistant work the title filters already strip.
+A	schoolboard	Hamilton-Wentworth DSB	Hamilton	hwdsb.on.ca
+A	schoolboard	Hamilton-Wentworth Catholic DSB	Hamilton	hwcdsb.ca
+A	schoolboard	Halton DSB	Burlington	hdsb.ca
+A	schoolboard	Halton Catholic DSB	Burlington	hcdsb.org
+A	schoolboard	Grand Erie DSB	Brantford	granderie.ca
+A	schoolboard	Brant Haldimand Norfolk Catholic DSB	Brantford	bhncdsb.ca
+B	schoolboard	District School Board of Niagara	St. Catharines	dsbn.org
+B	schoolboard	Niagara Catholic DSB	Welland	niagaracatholic.ca
+B	schoolboard	Waterloo Region DSB	Kitchener	wrdsb.ca
+B	schoolboard	Waterloo Catholic DSB	Kitchener	wcdsb.ca
+B	schoolboard	Upper Grand DSB	Guelph	ugdsb.ca
+B	schoolboard	Wellington Catholic DSB	Guelph	wellingtoncdsb.ca
+B	schoolboard	Peel DSB	Mississauga	peelschools.org
+B	schoolboard	Dufferin-Peel Catholic DSB	Mississauga	dpcdsb.org
+B	schoolboard	Toronto DSB	Toronto	tdsb.on.ca
+B	schoolboard	Toronto Catholic DSB	Toronto	tcdsb.org
+B	schoolboard	York Region DSB	Aurora	yrdsb.ca
+B	schoolboard	York Catholic DSB	Aurora	ycdsb.ca
+C	schoolboard	Durham DSB	Whitby	ddsb.ca
+C	schoolboard	Durham Catholic DSB	Oshawa	dcdsb.ca
+C	schoolboard	Simcoe County DSB	Barrie	scdsb.on.ca
+C	schoolboard	Thames Valley DSB	London	tvdsb.ca
+C	schoolboard	London District Catholic SB	London	ldcsb.ca
+C	schoolboard	Avon Maitland DSB	Stratford	amdsb.ca
+C	schoolboard	Bluewater DSB	Owen Sound	bwdsb.on.ca
+C	schoolboard	Kawartha Pine Ridge DSB	Peterborough	kprdsb.ca
+
+# === INDEPENDENT SCHOOLS ========================================================
+# Small, well-funded, run their own IT, and advertise almost nowhere.
+A	school	Hillfield Strathallan College	Hamilton	hsc.on.ca
+A	school	Columbia International College	Hamilton	cic-totalcare.com
+A	school	Appleby College	Oakville	appleby.on.ca
+A	school	St. Mildred's-Lightbourn School	Oakville	smls.on.ca
+B	school	Ridley College	St. Catharines	ridleycollege.com
+B	school	Upper Canada College	Toronto	ucc.on.ca
+B	school	Havergal College	Toronto	havergal.on.ca
+B	school	Branksome Hall	Toronto	branksome.on.ca
+B	school	The Bishop Strachan School	Toronto	bss.on.ca
+B	school	Crescent School	Toronto	crescentschool.org
+B	school	Toronto French School	Toronto	tfs.ca
+C	school	St. Andrew's College	Aurora	sac.on.ca
+C	school	The Country Day School	King City	cds.on.ca
+
+# === COLLEGES, UNIVERSITIES, RESEARCH INSTITUTES ================================
+A	university	McMaster University	Hamilton	mcmaster.ca
+A	university	Mohawk College	Hamilton	mohawkcollege.ca
+A	university	Redeemer University	Ancaster	redeemer.ca
+A	university	Six Nations Polytechnic	Ohsweken	snpolytechnic.com
+B	university	Brock University	St. Catharines	brocku.ca
+B	university	Niagara College	Welland	niagaracollege.ca
+B	university	University of Waterloo	Waterloo	uwaterloo.ca
+B	university	Wilfrid Laurier University	Waterloo	wlu.ca
+B	university	Conestoga College	Kitchener	conestogac.on.ca
+B	university	University of Guelph	Guelph	uoguelph.ca
+B	university	Sheridan College	Oakville	sheridancollege.ca
+B	university	University of Toronto	Toronto	utoronto.ca
+B	university	Toronto Metropolitan University	Toronto	torontomu.ca
+B	university	York University	Toronto	yorku.ca
+B	university	OCAD University	Toronto	ocadu.ca
+B	university	Humber Polytechnic	Toronto	humber.ca
+B	university	Seneca Polytechnic	Toronto	senecapolytechnic.ca
+B	university	Centennial College	Scarborough	centennialcollege.ca
+B	university	George Brown College	Toronto	georgebrown.ca
+B	university	Michener Institute	Toronto	michener.ca
+B	university	Perimeter Institute	Waterloo	perimeterinstitute.ca
+B	university	Vector Institute	Toronto	vectorinstitute.ai
+C	university	Durham College	Oshawa	durhamcollege.ca
+C	university	Ontario Tech University	Oshawa	ontariotechu.ca
+C	university	Georgian College	Barrie	georgiancollege.ca
+C	university	Western University	London	uwo.ca
+C	university	Fanshawe College	London	fanshawec.ca
+C	university	Trent University	Peterborough	trentu.ca
+
+# === PUBLIC LIBRARIES ===========================================================
+# Small IT teams, few postings a year, and effectively zero junior competition.
+# Several run their own board; the rest sit on the parent municipality's ATS.
+A	library	Hamilton Public Library	Hamilton	hpl.ca
+A	library	Burlington Public Library	Burlington	bpl.on.ca
+A	library	Oakville Public Library	Oakville	opl.ca
+A	library	Milton Public Library	Milton	mpl.on.ca
+A	library	Halton Hills Public Library	Georgetown	hhpl.on.ca
+A	library	Grimsby Public Library	Grimsby	grimsbylibrary.ca
+A	library	Brantford Public Library	Brantford	brantfordlibrary.ca
+B	library	St. Catharines Public Library	St. Catharines	stcatharines.library.on.ca
+B	library	Niagara Falls Public Library	Niagara Falls	nflibrary.ca
+B	library	Welland Public Library	Welland	wellandlibrary.ca
+B	library	Kitchener Public Library	Kitchener	kpl.org
+B	library	Waterloo Public Library	Waterloo	wpl.ca
+B	library	Idea Exchange	Cambridge	ideaexchange.org
+B	library	Region of Waterloo Library	Waterloo	rwlibrary.ca
+B	library	Guelph Public Library	Guelph	guelphpl.ca
+B	library	Brampton Library	Brampton	bramptonlibrary.ca
+B	library	Toronto Public Library	Toronto	torontopubliclibrary.ca
+B	library	Vaughan Public Libraries	Vaughan	vaughanpl.info
+B	library	Markham Public Library	Markham	markhampubliclibrary.ca
+B	library	Richmond Hill Public Library	Richmond Hill	rhpl.ca
+C	library	Oshawa Public Libraries	Oshawa	oshawalibrary.on.ca
+C	library	Whitby Public Library	Whitby	whitbylibrary.ca
+C	library	Pickering Public Library	Pickering	pickeringlibrary.ca
+C	library	Ajax Public Library	Ajax	ajaxlibrary.ca
+C	library	Barrie Public Library	Barrie	barrielibrary.ca
+C	library	London Public Library	London	lpl.ca
+B	library	Ontario Library Service	Toronto	olservice.ca
+
+# === MUNICIPAL AND REGIONAL GOVERNMENT ==========================================
+# Hamilton, Toronto, Mississauga, Ottawa and Waterloo Region are already on the
+# watchlist. These are the ones nobody bothers with.
+A	municipal	City of Burlington	Burlington	burlington.ca
+A	municipal	Town of Oakville	Oakville	oakville.ca
+A	municipal	Town of Milton	Milton	milton.ca
+A	municipal	Town of Halton Hills	Georgetown	haltonhills.ca
+A	municipal	Halton Region	Oakville	halton.ca
+A	municipal	City of Brantford	Brantford	brantford.ca
+A	municipal	County of Brant	Paris	brant.ca
+A	municipal	Haldimand County	Cayuga	haldimandcounty.ca
+A	municipal	Town of Grimsby	Grimsby	grimsby.ca
+A	municipal	Town of Lincoln	Beamsville	lincoln.ca
+A	municipal	Six Nations of the Grand River	Ohsweken	sixnations.ca
+A	municipal	Mississaugas of the Credit First Nation	Hagersville	mncfn.ca
+B	municipal	Niagara Region	Thorold	niagararegion.ca
+B	municipal	City of St. Catharines	St. Catharines	stcatharines.ca
+B	municipal	City of Niagara Falls	Niagara Falls	niagarafalls.ca
+B	municipal	City of Welland	Welland	welland.ca
+B	municipal	Norfolk County	Simcoe	norfolkcounty.ca
+B	municipal	City of Guelph	Guelph	guelph.ca
+B	municipal	County of Wellington	Guelph	wellington.ca
+B	municipal	City of Kitchener	Kitchener	kitchener.ca
+B	municipal	City of Waterloo	Waterloo	waterloo.ca
+B	municipal	City of Cambridge	Cambridge	cambridge.ca
+B	municipal	Region of Peel	Brampton	peelregion.ca
+B	municipal	City of Brampton	Brampton	brampton.ca
+B	municipal	Regional Municipality of York	Newmarket	york.ca
+B	municipal	City of Vaughan	Vaughan	vaughan.ca
+B	municipal	City of Markham	Markham	markham.ca
+C	municipal	Regional Municipality of Durham	Whitby	durham.ca
+C	municipal	City of Oshawa	Oshawa	oshawa.ca
+C	municipal	City of Barrie	Barrie	barrie.ca
+C	municipal	City of London	London	london.ca
+
+# === POLICE, EMERGENCY AND JUSTICE ==============================================
+# Separate employers from the municipality, with their own boards and their own
+# in-house IT. Background check, not security clearance.
+A	police	Hamilton Police Service	Hamilton	hamiltonpolice.on.ca
+A	police	Halton Regional Police Service	Oakville	haltonpolice.ca
+A	police	Brantford Police Service	Brantford	brantfordpolice.ca
+B	police	Niagara Regional Police Service	Niagara Falls	niagarapolice.ca
+B	police	Waterloo Regional Police Service	Cambridge	wrps.on.ca
+B	police	Peel Regional Police	Mississauga	peelpolice.ca
+B	police	York Regional Police	Aurora	yrp.ca
+B	police	Toronto Police Service	Toronto	torontopolice.on.ca
+C	police	Durham Regional Police Service	Whitby	drps.ca
+B	police	Ontario Provincial Police	Orillia	opp.ca
+
+# === UTILITIES AND ENERGY =======================================================
+A	utility	Alectra Utilities	Hamilton	alectrautilities.com
+A	utility	Burlington Hydro	Burlington	burlingtonhydro.com
+A	utility	Oakville Enterprises / Oakville Hydro	Oakville	oakvillehydro.com
+A	utility	Halton Hills Hydro	Georgetown	haltonhillshydro.com
+B	utility	Niagara Peninsula Energy	Niagara Falls	npei.ca
+B	utility	Enova Power	Kitchener	enovapower.com
+B	utility	Energy+	Cambridge	energyplus.ca
+B	utility	Hydro One	Toronto	hydroone.com
+B	utility	Ontario Power Generation	Toronto	opg.com
+B	utility	IESO	Toronto	ieso.ca
+B	utility	Enbridge Gas	Toronto	enbridge.com
+C	utility	Elexicon Energy	Whitby	elexiconenergy.com
+C	utility	Bruce Power	Tiverton	brucepower.com
+
+# === TRANSPORT AND INFRASTRUCTURE ===============================================
+A	transport	John C. Munro Hamilton International Airport	Mount Hope	flyhamilton.ca
+A	transport	Hamilton Oshawa Port Authority	Hamilton	hopaports.ca
+A	transport	Procor Limited	Oakville	procor.com
+B	transport	Metrolinx / GO Transit	Toronto	metrolinx.com
+B	transport	Greater Toronto Airports Authority	Mississauga	torontopearson.com
+B	transport	Toronto Transit Commission	Toronto	ttc.ca
+B	transport	CN Rail	Toronto	cn.ca
+B	transport	CPKC	Toronto	cpkcr.com
+B	transport	VIA Rail	Toronto	viarail.ca
+
+# === INSURANCE, MUTUALS, CREDIT UNIONS AND PENSIONS =============================
+# Old, conservative, well-capitalised, and structurally invisible to juniors.
+# Farm mutuals in particular run real .NET and Java shops and advertise nowhere.
+A	finance	FirstOntario Credit Union	Hamilton	firstontario.com
+A	finance	Tandia Financial Credit Union	Burlington	tandia.com
+B	finance	Meridian Credit Union	St. Catharines	meridiancu.ca
+B	finance	Definity Financial	Waterloo	definityfinancial.com
+B	finance	Equitable Life of Canada	Waterloo	equitable.ca
+B	finance	Gore Mutual Insurance	Cambridge	goremutual.ca
+B	finance	Cowan Insurance Group	Cambridge	cowangroup.ca
+B	finance	Trillium Mutual Insurance	Listowel	trilliummutual.com
+B	finance	Halwell Mutual Insurance	Guelph	halwellmutual.com
+B	finance	Ayr Farmers Mutual Insurance	Ayr	ayrfarmers.com
+B	finance	Kindred Credit Union	Kitchener	kindredcu.com
+B	finance	Your Neighbourhood Credit Union	Kitchener	yncu.com
+B	finance	DUCA Financial Services	Toronto	duca.com
+B	finance	Alterna Savings	Toronto	alterna.ca
+B	finance	OMERS	Toronto	omers.com
+B	finance	Ontario Teachers' Pension Plan	Toronto	otpp.com
+B	finance	HOOPP	Toronto	hoopp.com
+B	finance	CAAT Pension Plan	Toronto	caatpension.ca
+B	finance	WSIB	Toronto	wsib.ca
+
+# === MANUFACTURING AND INDUSTRIAL WITH IN-HOUSE IT ==============================
+# ArcelorMittal Dofasco is already watched. Everyone else on this list runs an ERP,
+# a plant-floor system and a small internal dev team, and hires quietly.
+A	industry	Stelco	Hamilton	stelco.com
+A	industry	Bunge Canada	Hamilton	bunge.com
+A	industry	L3Harris WESCAM	Waterdown	l3harris.com
+A	industry	Maple Leaf Foods	Mississauga	mapleleaffoods.com
+A	industry	SC Johnson Canada	Brantford	scjohnson.com
+A	industry	Ferrero Canada	Brantford	ferrerocareers.com
+A	industry	Wescast Industries	Brantford	wescast.com
+B	industry	Linamar	Guelph	linamar.com
+B	industry	ATS Corporation	Cambridge	atsautomation.com
+B	industry	Tigercat International	Brantford	tigercat.com
+B	industry	Toyota Motor Manufacturing Canada	Cambridge	tmmc.ca
+B	industry	Sofina Foods	Markham	sofinafoods.com
+B	industry	Canada Bread	Mississauga	canadabread.com
+B	industry	Nestle Canada	Toronto	nestle.ca
+B	industry	Martinrea International	Vaughan	martinrea.com
+B	industry	Magna International	Aurora	magna.com
+B	industry	George Weston	Toronto	weston.ca
+
+# === TECH THAT DOES NOT POST WHERE JUNIORS LOOK =================================
+# Waterloo Region especially. Mid-size product companies with their own boards,
+# no aggregator syndication, and a habit of hiring from co-op pipelines.
+A	tech	Cogeco	Burlington	cogeco.ca
+A	tech	Mabel's Labels	Hamilton	mabelslabels.ca
+A	tech	Weever Apps	St. Catharines	weeverapps.com
+B	tech	OpenText	Waterloo	opentext.com
+B	tech	D2L	Kitchener	d2l.com
+B	tech	Descartes Systems Group	Waterloo	descartes.com
+B	tech	Magnet Forensics	Waterloo	magnetforensics.com
+B	tech	eSentire	Cambridge	esentire.com
+B	tech	Arctic Wolf	Waterloo	arcticwolf.com
+B	tech	Miovision	Kitchener	miovision.com
+B	tech	Vidyard	Kitchener	vidyard.com
+B	tech	Axonify	Waterloo	axonify.com
+B	tech	Igloo Software	Kitchener	igloosoftware.com
+B	tech	Dejero	Waterloo	dejero.com
+B	tech	OTTO by Rockwell Automation	Kitchener	ottomotors.com
+B	tech	Intellijoint Surgical	Waterloo	intellijointsurgical.com
+B	tech	Voltera	Kitchener	voltera.io
+B	tech	Bonfire Interactive	Kitchener	gobonfire.com
+B	tech	Sandvine	Waterloo	sandvine.com
+B	tech	ApplyBoard	Kitchener	applyboard.com
+B	tech	Synaptive Medical	Toronto	synaptivemedical.com
+B	tech	Intelex Technologies	Toronto	intelex.com
+
+# === CROWN CORPORATIONS, AGENCIES AND REGULATORS ================================
+B	agency	Ontario Public Service	Toronto	ontario.ca
+B	agency	OLG	Toronto	olg.ca
+B	agency	LCBO	Toronto	lcbo.com
+B	agency	Public Health Ontario	Toronto	publichealthontario.ca
+B	agency	Infrastructure Ontario	Toronto	infrastructureontario.ca
+B	agency	Legal Aid Ontario	Toronto	legalaid.on.ca
+B	agency	Ontario Securities Commission	Toronto	osc.ca
+B	agency	CSA Group	Toronto	csagroup.org
+A	agency	CCOHS	Hamilton	ccohs.ca
+
+# === CONSERVATION AUTHORITIES AND ATTRACTIONS ===================================
+A	conservation	Hamilton Conservation Authority	Ancaster	conservationhamilton.ca
+A	conservation	Conservation Halton	Burlington	conservationhalton.ca
+A	conservation	Royal Botanical Gardens	Burlington	rbg.ca
+B	conservation	Niagara Peninsula Conservation Authority	Welland	npca.ca
+B	conservation	Grand River Conservation Authority	Cambridge	grandriver.ca
+B	conservation	Credit Valley Conservation	Mississauga	cvc.ca
+B	conservation	Toronto and Region Conservation	Vaughan	trca.ca
+B	conservation	Niagara Parks Commission	Niagara Falls	niagaraparks.com
+
+# === HEALTH-ADJACENT NON-PROFITS ================================================
+A	nonprofit	YMCA of Hamilton Burlington Brantford	Hamilton	ymcahbb.ca
+A	nonprofit	United Way Halton and Hamilton	Burlington	uwhh.ca
+B	nonprofit	Canadian Red Cross	Toronto	redcross.ca
+B	nonprofit	YMCA of Greater Toronto	Toronto	ymcagta.org
+B	nonprofit	SE Health	Markham	sehc.com
+B	nonprofit	Bayshore HealthCare	Mississauga	bayshore.ca
+B	nonprofit	CarePartners	Kitchener	carepartners.ca
+B	nonprofit	VON Canada	Toronto	von.ca
+B	nonprofit	CAA South Central Ontario	Thornhill	caasco.com
+
+# === MANUFACTURERS, QEW CORRIDOR ================================================
+# Hamilton, Burlington, Oakville, Mississauga. The bar for this section is a head
+# office here — a Canadian HQ or a divisional office on the same site as the plant —
+# not a branch plant run out of Michigan. That is what separates an employer with its
+# own IT, ERP, controls and applications people from one that posts only shop-floor
+# roles and routes everything else to a parent's global board.
+#
+# Verified 2026-09-12: every domain below answered. Four were corrected to where the
+# company actually lives now (Taylor Steel .com, Karma Candy .ca, StressCrete -> scgrp,
+# Arterra -> arterracanada) and four are named for the parent that now does the hiring
+# (TreeHouse, Second Nature Brands, Johnson Electric, Natus). Two candidates were cut:
+# Hamilton Specialty Bar (liquidated 2018, domain parked) and Nelson Steel (unverifiable).
+A	industry	National Steel Car	Hamilton	steelcar.com
+A	industry	Stryker Canada	Hamilton	stryker.com
+A	industry	E.D. Smith (TreeHouse Foods)	Stoney Creek	treehousefoods.com
+A	industry	Taylor Steel	Stoney Creek	taylorsteel.com
+A	industry	Fox 40 International	Hamilton	fox40world.com
+A	industry	Coppley Apparel	Hamilton	coppley.com
+A	industry	Tiercon Corp	Hamilton	tiercon.com
+A	industry	Liburdi Engineering	Dundas	liburdi.com
+A	industry	Karma Candy	Hamilton	karmacandy.ca
+A	industry	Bermingham Foundation Solutions	Hamilton	berminghammer.com
+A	industry	Fibracast	Hamilton	fibracast.com
+A	industry	Robertson Building Systems	Hamilton	robertsonbuildings.com
+A	industry	Stackpole International (Johnson Electric)	Ancaster	johnsonelectric.com
+A	industry	Mancor Industries	Stoney Creek	mancor.com
+A	industry	Turkstra Lumber	Hamilton	turkstra.com
+A	industry	Evertz Microsystems	Burlington	evertz.com
+A	industry	Voortman Bakery (Second Nature Brands)	Burlington	secondnaturebrands.com
+A	industry	Hunter Amenities International	Burlington	hunteramenities.com
+A	industry	Boehringer Ingelheim Canada	Burlington	boehringer-ingelheim.com
+A	industry	Endress+Hauser Canada	Burlington	endress.com
+A	industry	Cedarlane Laboratories	Burlington	cedarlanelabs.com
+A	industry	Ottobock Canada	Burlington	ottobock.ca
+A	industry	EcoSynthetix	Burlington	ecosynthetix.com
+A	industry	Anaergia	Burlington	anaergia.com
+A	industry	Ecodyne	Burlington	ecodyne.com
+A	industry	Umicore Autocat Canada	Burlington	umicore.com
+A	industry	StressCrete Group	Burlington	scgrp.com
+A	industry	Pollard Windows	Burlington	pollardwindows.com
+A	industry	AXYZ Automation	Burlington	axyz.com
+A	industry	Comtek Advanced Structures	Burlington	comtekadvanced.com
+A	industry	Gentherm Canada	Burlington	gentherm.com
+A	industry	PV Labs	Burlington	pvlabs.com
+A	industry	Semtech Canada	Burlington	semtech.com
+A	industry	Keltour Controls	Burlington	keltour.com
+A	industry	Emterra Group	Burlington	emterra.ca
+A	industry	Pinty's Delicious Foods	Burlington	pintys.com
+A	industry	Ippolito Group	Burlington	ippolitogroup.com
+A	industry	EarthFresh Foods	Burlington	earthfresh.com
+A	industry	Gerrie Electric	Burlington	gerrie.com
+A	industry	Ford Motor Company of Canada	Oakville	ford.ca
+A	industry	Collins Aerospace Oakville	Oakville	collinsaerospace.com
+A	industry	IPEX	Oakville	ipexna.com
+A	industry	Samuel Son & Co	Oakville	samuel.com
+A	industry	Zeton	Oakville	zeton.com
+A	industry	GVA Lighting	Oakville	gvalighting.com
+A	industry	Virox Technologies	Oakville	virox.com
+A	industry	Sumitomo Drive Technologies	Oakville	sumitomodrive.com
+A	industry	Siemens Canada	Oakville	siemens.ca
+A	industry	Excel-Tech XLTEK (Natus)	Oakville	natus.com
+A	industry	Richardson Oilseed	Oakville	richardson.ca
+A	industry	Olymel Oakville	Oakville	olymel.com
+A	industry	Mohawk Medbuy	Oakville	mohawkmedbuy.ca
+B	industry	Garland Commercial Ranges	Mississauga	garland-group.com
+B	industry	Cardinal Health Canada	Mississauga	cardinalhealth.ca
+B	industry	Magellan Aerospace	Mississauga	magellan.aero
+B	industry	Cyclone Manufacturing	Mississauga	cyclonemfg.com
+B	industry	Kruger Products	Mississauga	krugerproducts.com
+B	industry	Mother Parkers Tea & Coffee	Mississauga	motherparkers.com
+B	industry	PepsiCo Foods Canada	Mississauga	pepsico.ca
+B	industry	General Mills Canada	Mississauga	generalmills.ca
+B	industry	Arterra Wines Canada	Mississauga	arterracanada.com
+B	industry	Contract Pharmaceuticals	Mississauga	cpl.ca
+B	industry	GlaxoSmithKline Canada	Mississauga	gsk.ca
+B	industry	AstraZeneca Canada	Mississauga	astrazeneca.ca
+B	industry	Roche Canada	Mississauga	rochecanada.com
+B	industry	Alcon Canada	Mississauga	alcon.ca
+B	industry	Baxter Canada	Mississauga	baxter.ca
+B	industry	Baylis Medical Technologies	Mississauga	baylismedtech.com
+B	industry	Microbix Biosystems	Mississauga	microbix.com
+B	industry	Honeywell Canada	Mississauga	honeywell.com
+B	industry	Panasonic Canada	Mississauga	panasonic.com
+B	industry	Canon Canada	Mississauga	canon.ca
+B	industry	Sonoco Canada	Mississauga	sonoco.com
+B	industry	Linde Canada	Mississauga	lindecanada.com
+B	industry	Wajax	Mississauga	wajax.com
+B	industry	Johnston Equipment	Mississauga	johnstonequipment.com
+B	industry	AYA Kitchens	Mississauga	ayakitchens.com
+B	industry	MHI Canada Aerospace	Mississauga	mhica.ca
+B	industry	IMAX	Mississauga	imax.com
+B	industry	Givaudan Canada	Mississauga	givaudan.com
+B	industry	Multimatic	Mississauga	multimatic.com
+B	industry	Woodbridge Group	Mississauga	woodbridgegroup.com

@@ -57,3 +57,29 @@ def get_json(url):
         return json.loads(body)
     except ValueError as e:
         raise Unavailable(f"{url} -> not JSON ({e})") from e
+
+
+def post_json(url, payload):
+    """POST a JSON body, read a JSON answer. Same contract as `get`: never fatal."""
+    import json
+    data = json.dumps(payload).encode()
+    last = None
+    for attempt in range(RETRIES + 1):
+        try:
+            req = urllib.request.Request(url, data=data, method="POST", headers={
+                "User-Agent": UA, "Accept": "application/json",
+                "Content-Type": "application/json", "Accept-Language": "en-CA,en;q=0.9",
+            })
+            with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
+                return json.loads(r.read(CAP).decode("utf-8", "replace"))
+        except urllib.error.HTTPError as e:
+            last = f"HTTP {e.code}"
+            if e.code in (400, 401, 403, 404, 410):
+                break
+        except ValueError as e:
+            raise Unavailable(f"{url} -> not JSON ({e})") from e
+        except Exception as e:  # noqa: BLE001 — timeouts, DNS, resets, TLS
+            last = f"{type(e).__name__}: {e}"
+        if attempt < RETRIES:
+            time.sleep(1.5 * (attempt + 1))
+    raise Unavailable(f"{url} -> {last}")

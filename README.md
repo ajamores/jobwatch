@@ -26,13 +26,13 @@ little that it can run on a short timer.
 ```
 jobwatch/           the code, importable as a package
   hiringcafe/       search → scrape → parse
-  watchlist/        check + one adapter per job-board vendor
+  watchlist/        check + fingerprint + one adapter per job-board vendor
   notify.py  export.py  chrome.py  paths.py
 bin/                the two scheduled entry points
 config/             watchlist.txt, filters.txt, profile.md, searches/
 data/               state and generated output — disposable, gitignored
 exports/            spreadsheets — gitignored
-docs/               NOTES.md, unresolved.txt
+docs/               NOTES.md, unresolved.txt, census.tsv
 ```
 
 Everything runs as a module from the repo root: `python -m jobwatch.watchlist.check`.
@@ -70,15 +70,30 @@ account password, and the account needs 2FA. Skip it and use `--no-mail`.
 not code:
 
 ```
-ats             host                          label
+ats             host                          label                     extras
 bamboohr        cityofhamilton.bamboohr.com   City of Hamilton
 successfactors  jobs.toronto.ca               City of Toronto           path=/jobsatcity
+workday         milton.wd10.myworkdayjobs.com Town of Milton            site=TownOfMilton,where=Milton
+ukg             recruiting.ultipro.ca         Meridian Credit Union     tenant=MER5001MCUL,board=6c1f133f-...
+adp             workforcenow.adp.com          City of Markham           cid=04bf51f8-...,where=Markham
 ```
 
-The trick is that employers do not build careers pages, they rent them. Seventeen of the
-bookmarked employers here use three vendors between them, so there are three adapters in
-`jobwatch/watchlist/adapters/` rather than seventeen scrapers. `path=` names the
-career-site prefix for tenants that use one; most answer at the root as well.
+The trick is that employers do not build careers pages, they rent them. The 75
+employers here use 6 vendors between them, so there are 6 adapters in
+`jobwatch/watchlist/adapters/` rather than 75 scrapers. That ratio is the whole
+design, and it is why adding an employer is usually a line rather than a day.
+
+Extras ride at the end of the line, comma-separated:
+
+| Extra | Vendor | What it is |
+|---|---|---|
+| `path=` | SuccessFactors | the career-site prefix, for tenants that use one |
+| `site=` | Workday | the board's own path segment |
+| `tenant=` | Workday | only for tenants on the shared `myworkdaysite.com` host |
+| `facet=<param>:<id>` | Workday | narrows a global board server-side — Magna is 1,428 postings worldwide and 203 in Canada |
+| `tenant=`, `board=` | UKG | several tenants share the one host |
+| `cid=` | ADP | every tenant is on the one host, told apart by client id |
+| `where=` | any | the employer's town, for boards that print a building — "Town Hall", "Lake Erie Works" — instead of a place. The `@` filter would otherwise drop every one of them |
 
 Unlike the hiring.cafe run there is **no age filter** — these employers are worth checking
 whether a posting went up today or in 2024. "New" means new to `data/seen_sites.json`.
@@ -93,7 +108,34 @@ carriers.
 @ hamilton       an acceptable place; unknown locations are kept
 ```
 
-`docs/unresolved.txt` lists the bookmarked employers with no adapter yet, and why.
+`docs/unresolved.txt` lists every employer with no adapter yet and why — vendor by
+vendor, with the reason each one resists.
+
+## The census
+
+`docs/census.tsv` is 287 institutional and overlooked employers within about 200km of
+Hamilton: hospitals, school boards, universities, libraries, municipalities, police
+services, utilities, farm mutuals, credit unions, conservation authorities. The premise is
+that none of them compete for juniors on LinkedIn. They post once, on their own board, and
+wait.
+
+`jobwatch.watchlist.fingerprint` resolves each one to its real careers page and names the
+vendor, so the build order is decided by the data rather than by guesswork:
+
+```bash
+python -m jobwatch.watchlist.fingerprint                      # all of them
+python -m jobwatch.watchlist.fingerprint --sector hospital    # one sector
+python -m jobwatch.watchlist.fingerprint --recheck-markup     # re-probe the weak matches
+```
+
+It follows the employer's own careers link two hops, then reads the vendor off the URL it
+lands on — or failing that off a board link in the markup, which is the tenant URL an
+adapter actually needs. Results land in `data/census_vendors.tsv`.
+
+The answer on 2026-09-11: 114 of the 287 hand-roll their careers page, and 157 rent one.
+Workday leads with 24, then ApplyToEducation with 18 — login-walled, which puts every
+public school board out of reach — SuccessFactors 15, Dayforce and ADP 11 each, UKG and
+Taleo 10. That is what chose `workday`, `ukg` and `adp` as the adapters to write.
 
 ## Changing the search
 
@@ -117,7 +159,8 @@ python -m jobwatch.hiringcafe.parse --location "Toronto,Hamilton" --workplace Re
 | `hiringcafe.scrape` | Every page of results → `data/jobs_raw.json` |
 | `hiringcafe.parse` | Flatten, filter, dedupe → `jobs.json` + `new.json`, tracked in `seen.json` |
 | `watchlist.check` | Every employer in `watchlist.txt` → `sites_jobs.json` + `new_sites.json`, tracked in `seen_sites.json` |
-| `watchlist.adapters` | One module per job-board vendor — `bamboohr`, `greenhouse`, `successfactors` |
+| `watchlist.fingerprint` | Every employer in `docs/census.tsv` → which vendor each one rents |
+| `watchlist.adapters` | One module per job-board vendor — `adp`, `bamboohr`, `greenhouse`, `successfactors`, `ukg`, `workday` |
 | `notify` | Emails what is new. Sends nothing when nothing is new |
 | `export` | Any of those JSON files → a CSV that opens cleanly in Sheets |
 | `bin/watch.sh` | scrape → parse → notify. Cron-safe |

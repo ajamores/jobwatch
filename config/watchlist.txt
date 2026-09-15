@@ -2,9 +2,13 @@
 #
 #   ats  host  label  [key=value,...]        (two or more spaces between fields)
 #
+#   where=<town>  works for any vendor. For boards that print a building ("Town Hall",
+#                 "Lake Erie Works") instead of a place, it tells the @ filter which
+#                 town the employer is in. No commas in the value.
+#
 # The point of this file is that adding an employer is a line, not code. There is one
-# adapter per job-board vendor in sources/, and your bookmarks only use a handful of
-# vendors between them.
+# adapter per job-board vendor in jobwatch/watchlist/adapters/, and your bookmarks
+# only use a handful of vendors between them.
 #
 # Unlike the hiring.cafe run, nothing here is filtered by age: these employers are worth
 # checking whether a posting went up today or last year. "New" means new to seen_sites.json.
@@ -37,3 +41,95 @@ successfactors  najobs.arcelormittal.com      ArcelorMittal Dofasco     path=/do
 # Ferrero is NOT SuccessFactors — the fingerprint was a false positive and
 # /tile-search-results/ 404s there. Left out until its real vendor is identified.
 # ???           www.ferrerocareers.com        Ferrero
+
+
+# ===============================================================================
+# From the 2026-09 institutional census — docs/census.tsv. Employers junior
+# developers do not think of as employers: pension plans, hospitals, agencies,
+# universities, credit unions, independent schools.
+# ===============================================================================
+
+# --- Workday -------------------------------------------------------------------
+# Host plus site= (the first path segment of the public board). Tenants on the
+# shared myworkdaysite.com host also need tenant=. Global boards are narrowed on the
+# server with facet=<parameter>:<id>; a30a87ed... is Workday's own id for Canada.
+# Provincial agencies get where=Ontario because every posting they have is in it.
+workday         csagroup.wd3.myworkdayjobs.com              CSA Group                             site=csagroup
+workday         lcbo.wd3.myworkdayjobs.com                  LCBO                                  site=LCBOCareerSite,where=Ontario
+workday         olg.wd3.myworkdayjobs.com                   OLG                                   site=Careers,where=Ontario
+workday         osc.wd3.myworkdayjobs.com                   Ontario Securities Commission         site=OSCCareers,where=Toronto
+workday         publichealthontario.wd10.myworkdayjobs.com  Public Health Ontario                 site=PHOCareerSite,where=Ontario
+workday         oh.wd3.myworkdayjobs.com                    Ontario Health                        site=OH,where=Ontario
+workday         caatpension.wd10.myworkdayjobs.com          CAAT Pension Plan                     site=Careers,where=Toronto
+workday         hoopp.wd10.myworkdayjobs.com                HOOPP                                 site=HOOPP,where=Toronto
+workday         otppb.wd3.myworkdayjobs.com                 Ontario Teachers' Pension Plan        site=OntarioTeachers_Careers
+workday         shn.wd10.myworkdayjobs.com                  Scarborough Health Network            site=SHN_External_Career_Site,where=Scarborough
+workday         southlake.wd10.myworkdayjobs.com            Southlake Health                      site=Southlake,where=Newmarket Ontario
+workday         prhc.wd10.myworkdayjobs.com                 Peterborough Regional Health Centre   site=PRHC,where=Peterborough Ontario
+workday         uwaterloo.wd3.myworkdayjobs.com             University of Waterloo                site=UW_Careers,where=Waterloo
+workday         stelco.wd3.myworkdayjobs.com                Stelco                                site=Stelco,where=Hamilton
+workday         wd10.myworkdaysite.com                      City of Burlington                    site=cob,tenant=cityofburlington,where=Burlington
+workday         milton.wd10.myworkdayjobs.com               Town of Milton                        site=TownOfMilton,where=Milton
+workday         niagarafalls.wd10.myworkdayjobs.com         City of Niagara Falls                 site=CNF,where=Niagara Falls
+workday         applyboard.wd3.myworkdayjobs.com            ApplyBoard                            site=ApplyBoardNH
+workday         arcticwolf.wd1.myworkdayjobs.com            Arctic Wolf                           site=External
+workday         enbridge.wd3.myworkdayjobs.com              Enbridge                              site=enbridge_careers
+workday         wd3.myworkdaysite.com                       Magna International                   site=Magna,tenant=magna,facet=Country:a30a87ed25634629aa6c3958aa2b91ea
+workday         rockwellautomation.wd1.myworkdayjobs.com    OTTO by Rockwell Automation           site=External_Rockwell_Automation,facet=locationCountry:a30a87ed25634629aa6c3958aa2b91ea
+workday         marmon.wd501.myworkdayjobs.com              Procor (Marmon)                       site=Marmon_Careers,facet=locationCountry:a30a87ed25634629aa6c3958aa2b91ea
+# Hamilton Oshawa Port Authority is NOT here: its careers page links to a port
+# tenant's Workday board (BWC Terminals), not its own.
+
+# --- SuccessFactors, census additions --------------------------------------------
+# Waterloo Regional Police share a host with Region of Waterloo above; path= keeps
+# the boards apart, and a posting listed on both collapses on its id.
+successfactors  jobs.utoronto.ca                            University of Toronto
+successfactors  careers.uoguelph.ca                         University of Guelph
+successfactors  careers.halton.ca                           Halton Region
+successfactors  careers.wellington.ca                       County of Wellington
+successfactors  careers.regionofwaterloo.ca                 Waterloo Regional Police              path=/WRPS
+successfactors  careers.blood.ca                            Canadian Blood Services
+successfactors  careers.ieso.ca                             IESO
+successfactors  careers.viarail.ca                          VIA Rail
+successfactors  jobs.atsautomation.com                      ATS Corporation
+
+# --- UKG Pro Recruiting (UltiPro) -------------------------------------------------
+# The credit unions' vendor. Tenants share hosts, so tenant= and board= name the
+# board: <host>/<tenant>/JobBoard/<board>. Tandia had nothing posted on 2026-09-11 —
+# an empty board, not a broken one.
+ukg             recruiting.ultipro.ca                       Alterna Savings                       tenant=ALT5000ASCUL,board=5cf23382-2cd5-42f4-8a95-48fc4c5822db
+ukg             recruiting.ultipro.ca                       Kindred Credit Union                  tenant=KIN5000KNDR,board=0572e5a5-a8c7-47f6-b8e0-88699cbdbb18
+ukg             recruiting.ultipro.ca                       Meridian Credit Union                 tenant=MER5001MCUL,board=6c1f133f-d0ac-48cd-a17d-bc54fe044ce3
+ukg             recruiting.ultipro.ca                       Tandia Financial Credit Union         tenant=TAN5000TANF,board=20421908-f62c-41f1-b097-201bc223f210
+ukg             recruiting.ultipro.ca                       Homewood Health                       tenant=HOM5002HOHC,board=f118bd9c-ace7-44de-914c-725450541f72
+ukg             recruiting.ultipro.ca                       Ontario Shores                        tenant=ONT5002ONTS,board=31832fa9-ea47-4976-8434-5c0e82e2c1d0
+ukg             recruiting.ultipro.ca                       London Public Library                 tenant=LON5100LPLY,board=5a8bb7ac-1f7b-4aae-9db8-37f3df5b9940
+ukg             recruiting.ultipro.ca                       Dejero                                tenant=DEJ5000DEJER,board=8854e1d8-3cd7-41f7-8c18-8b59d223a74d
+ukg             recruiting2.ultipro.com                     Sandvine                              tenant=PRO1053PROC,board=d6eed263-4950-420d-b9f8-5b1a441c931e
+ukg             recruiting.ultipro.ca                       Enova Power                           tenant=WAT5000WALO,board=9c73db72-3ecf-4d77-ab2b-f7b64b454bb1
+
+# --- ADP Workforce Now -------------------------------------------------------------
+# One host for every tenant; cid= tells them apart.
+adp             workforcenow.adp.com                        Niagara Parks Commission              cid=e2b4f25a-a77b-4b3d-9657-b97ec357ea04,where=Niagara Falls
+adp             workforcenow.adp.com                        Royal Botanical Gardens               cid=0d227672-25e6-42ff-ab05-1ee7a32bf454,where=Burlington
+adp             workforcenow.adp.com                        Cowan Insurance Group                 cid=d88e0092-95b0-41ed-a5d5-74c50b4aeb27,where=Cambridge
+adp             workforcenow.adp.com                        City of Markham                       cid=04bf51f8-d2dd-4641-ba92-183522f6e8b3,where=Markham
+adp             workforcenow.adp.com                        Branksome Hall                        cid=9c7705b2-9f7b-4fda-93c2-caa9ba8fb106,where=Toronto
+adp             workforcenow.adp.com                        The Bishop Strachan School            cid=a455d512-2c15-4e80-9909-f7252c8d6408,where=Toronto
+adp             workforcenow.adp.com                        Upper Canada College                  cid=1128f898-65af-4eaa-a381-3be480a88734,where=Toronto
+adp             workforcenow.adp.com                        Vector Institute                      cid=4ed2be93-8bc5-40e2-915f-931884eac404,where=Toronto
+adp             workforcenow.adp.com                        Hillfield Strathallan College         cid=38b403a8-f7cd-4242-8c52-573a0c5740af,where=Hamilton
+adp             workforcenow.adp.com                        Oakville Hydro                        cid=7796a5ac-e0e2-40db-9306-5882e2e08113,where=Oakville
+# Those two embed the board by script rather than linking it; the client id was read
+# out of the page. A wrong id 404s and these answer 200, so they are the real boards —
+# Hillfield simply had nothing posted on 2026-09-11.
+# Appleby College is still missing: its site refuses a plain script (403).
+
+# --- BambooHR and Greenhouse, census additions -------------------------------
+# Adapters that already existed; these employers simply had not been found yet.
+bamboohr        whca.bamboohr.com                           Groves Memorial / Wellington Health Care  where=Fergus
+bamboohr        brantfordpoliceservice.bamboohr.com         Brantford Police Service              where=Brantford
+bamboohr        voltera.bamboohr.com                        Voltera                               where=Kitchener
+bamboohr        redeemer.bamboohr.com                       Redeemer University                   where=Ancaster
+bamboohr        snpolytechnic.bamboohr.com                  Six Nations Polytechnic               where=Ohsweken
+greenhouse      goremutualinsurance                         Gore Mutual Insurance                 where=Cambridge

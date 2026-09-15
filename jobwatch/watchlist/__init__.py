@@ -9,9 +9,9 @@ to. Every adapter returns the record defined in `schema.py` — the same shape
 import re
 from dataclasses import dataclass, field
 
-from .adapters import bamboohr, greenhouse, successfactors
+from .adapters import adp, bamboohr, greenhouse, successfactors, ukg, workday
 
-ADAPTERS = {m.ATS: m for m in (bamboohr, greenhouse, successfactors)}
+ADAPTERS = {m.ATS: m for m in (adp, bamboohr, greenhouse, successfactors, ukg, workday)}
 
 
 @dataclass
@@ -45,7 +45,9 @@ def parse_watchlist(text):
                             f"{', '.join(sorted(ADAPTERS))})")
             continue
         extra = {}
-        if rest and "=" in rest[-1] and " " not in rest[-1]:
+        # Extras may carry a place with a space in it — where=St. Catharines — so
+        # recognise them by a leading key= rather than by having no spaces.
+        if rest and re.match(r"^[a-z_]+=", rest[-1]):
             for pair in rest.pop().split(","):
                 k, _, v = pair.partition("=")
                 extra[k.strip()] = v.strip()

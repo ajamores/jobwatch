@@ -56,6 +56,7 @@
 + test
 + tester
 + automation
++ sdet
 
 # --- IT ------------------------------------------------------------------------
 # Short entries like "it" are matched whole, so this does not catch "Item Clerk".
@@ -159,7 +160,11 @@
 - utilities
 - controls
 - control and automation
-- technologist
+# Not bare "technologist": that dropped QA Technologist and Test Technologist too.
+# Aim at the plant and lab versions instead.
+- engineering technologist
+- laboratory
+- materials testing
 - supervisor
 
 # --- not tech at all ------------------------------------------------------------
@@ -188,6 +193,40 @@
 - coach
 - bilingual
 - french
+
+# --- factory-floor engineering --------------------------------------------------
+# Magna's board is 203 Canadian postings and most of them are plant engineering:
+# Tooling, SMT, Energy, Industrial. The existing "engineer that is not software"
+# list above was written against consultancies and cities and does not reach them.
+# Deliberately NOT excluded: "quality engineering" and "deployment engineer", both
+# of which are ordinary software titles too.
+- tooling
+- tool and die
+- die
+- mould
+- mold
+- stamping
+- casting
+- foundry
+- extrusion
+- injection
+- machining
+- cnc
+- smt
+- industrial engineer
+- manufacturing engineer
+- production engineer
+- energy engineer
+- design engineering
+
+# --- fundraising, which "development" otherwise catches --------------------------
+# "Officer, Development (Foundation)" at Southlake matched the + list on "development".
+- foundation
+- fundraising
+- donor
+- philanthropy
+- advancement
+- annual giving
 
 # --- where ---------------------------------------------------------------------
 @ hamilton

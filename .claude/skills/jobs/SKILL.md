@@ -7,8 +7,13 @@ description: Search for job postings and report what is worth applying to. Use w
 
 Two streams. `bin/watch.sh` sweeps hiring.cafe and needs a **headed** Chrome — headless
 never clears Cloudflare, so every run opens a visible browser window for ~15 seconds. That
-is expected. `bin/watch-sites.sh` checks Armand's bookmarked employers on their own
+is expected. `bin/watch-sites.sh` checks 75 employers on their own
 boards, needs no browser, and is the cheap one to reach for.
+
+Those 75 rent 6 vendors between them, which is why there are 6 adapters and not 75
+scrapers. Most of them came out of `docs/census.tsv` — 287 institutional employers within
+200km of Hamilton, the ones juniors never think to check. `docs/unresolved.txt` says which
+are still out of reach and why.
 
 Everything runs as a module from the repo root: `.venv/bin/python -m jobwatch.<thing>`.
 Read `docs/NOTES.md` before changing anything; it records why each piece works the way it
@@ -59,6 +64,7 @@ Filter at the server when you can, at parse time when you cannot.
 | Recent only | `parse --max-age 7` |
 | A salary floor | `parse --salary-min 90000` (keeps jobs with no listed band) |
 | Which employers are checked directly | a line in `config/watchlist.txt` |
+| Which employers exist to be checked at all | `docs/census.tsv`, then `python -m jobwatch.watchlist.fingerprint` |
 | Which titles and places count on those boards | `config/filters.txt` |
 
 Department values: Software Development, Quality Assurance, Engineering, Research and

@@ -30,7 +30,15 @@ def check(site):
     """One employer. Returns (site, jobs, error) — a bad site never fails the run."""
     adapter = ADAPTERS[site.ats]
     try:
-        return site, adapter.fetch(site), None
+        jobs = adapter.fetch(site)
+        # Institutional boards name buildings, not towns — "Town Hall", "Lake Erie
+        # Works" — and the place filter would drop every one of them. where= in the
+        # watchlist says which town the employer is actually in.
+        where = site.extra.get("where")
+        if where:
+            for job in jobs:
+                job["cities"] = [*job["cities"], where]
+        return site, jobs, None
     except Unavailable as e:
         return site, [], str(e)
     except Exception as e:  # noqa: BLE001 — a markup change must not stop the others
